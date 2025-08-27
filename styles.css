@@ -26,12 +26,12 @@ body.modal-open {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  min-height: 60vh;
   height: auto;
-  max-height: 100vh;
+  max-height: 80vh;
   position: relative;
   z-index: 1; /* ヘッダーの山背景より手前、コンテンツより奥 */
-  padding: 120px 20px 40px;
+  padding: 60px 20px 20px;
   box-sizing: border-box;
   background: #fff !important;
   background-repeat: no-repeat, repeat !important;
@@ -41,13 +41,14 @@ body.modal-open {
 
 .hero-image-container {
   position: relative;
-  width: 100%;
-  max-width: 600px;
+  width: 70%;
+  max-width: 420px;
   height: auto;
   aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translateY(-100px);
 }
 
 .hero-torii, .hero-orochi {
@@ -257,6 +258,7 @@ body.modal-open {
   background:
     linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
     url('./assets/wagara-bg.png') repeat;
+  transform: translateY(-50px);
 }
 
 #portfolio,
@@ -269,14 +271,14 @@ body.modal-open {
 /* --- レスポンシブ対応 --- */
 @media (max-width: 768px){
   .hero-section {
-    min-height: 70vh;
-    padding: 100px 15px 30px;
+    min-height: 50vh;
+    padding: 50px 15px 15px;
     background-size: 100% 100%, auto calc(var(--wagara-size) * 0.8) !important;
   }
   
   .hero-image-container {
-    max-width: 85vw;
-    width: 100%;
+    max-width: 60vw;
+    width: 70%;
   }
   
   #main-content {
@@ -286,12 +288,13 @@ body.modal-open {
 
 @media (max-width: 480px){
   .hero-section {
-    min-height: 60vh;
-    padding: 90px 10px 20px;
+    min-height: 45vh;
+    padding: 45px 10px 10px;
   }
   
   .hero-image-container {
-    max-width: 90vw;
+    max-width: 63vw;
+    width: 70%;
   }
 
   /* 紫サムネイルの480px以下での調整 */
@@ -315,7 +318,8 @@ body.modal-open {
   }
   
   .hero-image-container {
-    max-width: 700px;
+    max-width: 420px;
+    width: 70%;
   }
 }
 
@@ -884,14 +888,14 @@ body.modal-open {
 /* --- イントロセクション --- */
 .intro-section{
   position: relative;
-  height: 220px;
+  height: 110px;
   overflow: hidden;
   background: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 0 20px 20px;
+  padding: 0 20px 10px;
   font-family: var(--font-base);
 }
 
@@ -916,9 +920,10 @@ body.modal-open {
 }
 
 #hero-intro{
-  margin-top: -42px;
-  padding: 0 20px 20px;
-  min-height: 120px;
+  margin-top: -20px;
+  padding: 0 20px 10px;
+  min-height: 60px;
+  transform: translateY(-100px);
 }
 
 /* --- ニュースセクション --- */
