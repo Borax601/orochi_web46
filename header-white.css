@@ -492,9 +492,19 @@ html.is-menu-open{
   #video-corner{ padding-top: 28px !important; }
 }
 
-/* === gallery: #main-content の上パディングを 0 に（ページ限定） === */
+/* === gallery: #main-content の上パディングを0に（margin-topで代替） === */
 body#page-gallery #main-content{
-  padding-top: 0 !important;   /* 150px → 0 に上書き */
+  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
+}
+
+/* === AI gallery: #main-content の上パディングを0に（margin-topで代替） === */
+body#page-ai-gallery #main-content{
+  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
+}
+
+/* === Video gallery: #main-content の上パディングを0に（margin-topで代替） === */
+body#page-video-gallery #main-content{
+  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
 }
 
 /* === page scoped: remove top padding on #main-content ================== */

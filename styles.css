@@ -203,6 +203,32 @@ section.content-section#portfolio {
   padding-top: 20px !important;
 }
 
+/* Gallery section - 40px top spacing */
+section.content-section#full-gallery {
+  padding-top: 40px !important;
+}
+
+/* Gallery page: Ensure main content doesn't overlap with header */
+body#page-gallery #main-content {
+  margin-top: 130px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* AI Gallery page (toki-sude-ni-orochi): Same header-main separation */
+body#page-ai-gallery #main-content {
+  margin-top: 130px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Video Gallery page: Same header-main separation */
+body#page-video-gallery #main-content {
+  margin-top: 130px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 /* 既存の装飾を無効化 */
 #page-gallery h1.section-title::after,
 #page-ai-gallery h2.section-title::after { 
