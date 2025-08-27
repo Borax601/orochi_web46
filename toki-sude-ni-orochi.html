@@ -14,14 +14,7 @@
     <link rel="icon" type="image/svg+xml" href="assets/orochi.svg">
     <link rel="apple-touch-icon" href="assets/orochi-180.png">
     <style>
-      /* === toki-sude-ni-orochi.html 専用：gallery と同じ間隔 & 見出しトーンへ === */
-
-      /* 1) 固定ヘッダーのオフセット：gallery と同値（保険。既に効いていれば変化なし） */
-      body#page-ai-gallery #main-content{
-        padding-top: 0 !important;
-      }
-
-      /* 2) 見出しを gallery と同じコンパクト体裁へ（共通バッジ装飾を無効化） */
+      /* toki-sude-ni-orochi.html 専用スタイル */
       #page-ai-gallery .section-title{
         font-family: var(--font-title);
         font-weight: 700;
@@ -29,10 +22,8 @@
         line-height: 1.25;
         letter-spacing: 0.02em;
         color: #372e51;
-
-        /* バッジ装飾をリセットして、中央寄せ＋上下余白を gallery と同値に */
         width: fit-content;
-        margin: 16px auto 32px;   /* 上:16 / 下:32（gallery と同じ） */
+        margin: 16px auto 32px;
         text-align: center;
         background: transparent;
         padding: 0;
@@ -40,6 +31,7 @@
         box-shadow: none;
         position: relative;
       }
+      
       #page-ai-gallery .section-title::after{
         content: "";
         display: block;
@@ -50,7 +42,6 @@
         background: linear-gradient(90deg,#7d63ce,#a08ff0);
       }
 
-      /* 3) 見出し下の説明も gallery と同じ余白・行幅へ */
       #page-ai-gallery .section-description{
         max-width: 72ch;
         margin: 0 auto 32px;
@@ -60,10 +51,10 @@
         text-align: left;
       }
 
-      /* 4) 最上段セクションの外側マージンで余白が増えないよう保険（副作用なし） */
-      #page-ai-gallery .content-section:first-of-type{ margin-top: 0; }
+      #page-ai-gallery .content-section:first-of-type{ 
+        margin-top: 0; 
+      }
 
-      /* 5) モバイル表示での中央配置調整 */
       @media (max-width: 768px) {
         #page-ai-gallery .section-title {
           width: fit-content !important;
@@ -150,6 +141,11 @@
         <!-- 作品カード -->
         <div class="full-page-grid" id="full-gallery-grid"></div>
       </div>
+      
+      <!-- Scroll to top button -->
+      <div class="view-all-container">
+        <a href="#" class="view-all-button scroll-to-top">先頭へ</a>
+      </div>
     </section>
   </main>
 
@@ -165,5 +161,21 @@
   <script src="./likes.js"></script>
   
   <script src="main.js?v=20250814"></script>
+  
+  <script>
+    // Scroll to top functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollToTopBtn = document.querySelector('.scroll-to-top');
+      if (scrollToTopBtn) {
+        scrollToTopBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

@@ -492,89 +492,11 @@ html.is-menu-open{
   #video-corner{ padding-top: 28px !important; }
 }
 
-/* === gallery: #main-content の上パディングを0に（margin-topで代替） === */
-body#page-gallery #main-content{
-  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
-}
-
-/* === AI gallery: #main-content の上パディングを0に（margin-topで代替） === */
-body#page-ai-gallery #main-content{
-  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
-}
-
-/* === Video gallery: #main-content の上パディングを0に（margin-topで代替） === */
-body#page-video-gallery #main-content{
-  padding-top: 0 !important;   /* margin-topで代替するため0にリセット */
-}
-
-/* === page scoped: remove top padding on #main-content ================== */
-/* toki-sude-ni-orochi.html */
-body#page-toki-sude-ni-orochi main#main-content{
-  padding-top: 0 !important;     /* 150 → 0 */
-}
-
-/* video.html */
-body#page-video main#main-content{
-  padding-top: 0 !important;     /* 150 → 0 */
-}
-
-/* ▼もし上下左右すべて 0 にしたい場合は下記を代わりに使用（どちらか片方） */
-/*
-body#page-toki-sude-ni-orochi main#main-content,
-body#page-video              main#main-content{
-  padding: 0 !important;
-}
-*/
-
-/* === page-scoped: force #main-content top padding to 0 ================= */
-/* 詳細度を上げるため、IDを二重指定＋要素ID重複を使う。 */
-body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
+/* ===== Gallery Pages: Unified Padding Reset ===== */
+body#page-gallery #main-content,
+body#page-ai-gallery #main-content,
+body#page-video-gallery #main-content {
   padding-top: 0 !important;
-}
-body#page-video body#page-video main#main-content#main-content{
-  padding-top: 0 !important;
-}
-
-/* === unify header↔main gap with gallery (page-scoped, safe) ============ */
-/* gallery と同じく main#main-content の上側余白を 0 に固定する。
-   詳細度で勝つために ID×2 + 要素ID で強制、!important を併用。 */
-
-/* 時すでにオロチ（toki-sude-ni-orochi.html） */
-body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
-  padding-top: 0 !important;
-  margin-top: 0 !important;   /* 念のため */
-}
-
-/* 動くオロチ奉納殿（video.html） */
-body#page-video body#page-video main#main-content#main-content{
-  padding-top: 0 !important;
-  margin-top: 0 !important;   /* 念のため */
-}
-
-/* === unify with gallery: header→main gap = 0 & no see-through =========== */
-/* 1) ヘッダー直下の余白を 0（padding/margin どちらでも潰れるように両方）*/
-/* 2) 背面透け対策：gallery と同様に main 背景を白で塗りつぶし、opacityを固定 */
-
-/* toki-sude-ni-orochi.html */
-body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  background-color: #fff !important;  /* 背面透け防止（gallery と同じ見え方） */
-  opacity: 1 !important;              /* JSや他CSSで薄くされないよう固定 */
-}
-
-/* video.html */
-body#page-video body#page-video main#main-content#main-content{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  background-color: #fff !important;  /* 背面透け防止（gallery と同じ見え方） */
-  opacity: 1 !important;              /* JSや他CSSで薄くされないよう固定 */
-}
-
-/* ページ先頭の“最初のセクション”が余計に空いている場合の保険（ページ限定） */
-body#page-toki-sude-ni-orochi #main-content > .content-section:first-child,
-body#page-video              #main-content > .content-section:first-child{
-  margin-top: 0 !important;
 }
 
 /* ==== Mobile menu: failsafe & icon sizing (global) ==== */
@@ -601,6 +523,4 @@ html.is-menu-open .mobile-menu-panel{ display:block; }
   .mobile-menu-panel .icon-link .cart-icon{ width:16px; height:16px; }
 }
 
-/* toki-sude-ni-orochi（= body#page-ai-gallery）も gallery と同じ余白に */
-body#page-ai-gallery #main-content { padding-top: 0 !important; }
-body#page-ai-gallery #main-content > .content-section:first-child { margin-top: 0 !important; }
+/* Legacy settings - now handled in unified gallery pages CSS */

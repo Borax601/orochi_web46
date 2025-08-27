@@ -198,43 +198,12 @@ body.modal-open {
   text-align: left;
 }
 
-/* Portfolio section - 20px top spacing */
-section.content-section#portfolio {
-  padding-top: 20px !important;
+/* #portfolioの見出しに追加の上余白 */
+#portfolio h2.section-title {
+  margin-top: 44px; /* 24px + 20px */
 }
 
-/* Gallery section - 40px top spacing */
-section.content-section#full-gallery {
-  padding-top: 40px !important;
-}
-
-/* ===== Gallery Pages: Unified Layout Settings ===== */
-
-/* Header-main separation and positioning */
-body#page-gallery #main-content,
-body#page-ai-gallery #main-content,
-body#page-video-gallery #main-content {
-  margin-top: 130px !important;
-  padding-bottom: 30px !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Prevent double padding in sections */
-body#page-gallery #full-gallery,
-body#page-ai-gallery .content-section,
-body#page-video-gallery .content-section {
-  padding-bottom: 0 !important;
-}
-
-/* Seamless main-footer connection */
-body#page-gallery .footer,
-body#page-ai-gallery .footer,
-body#page-video-gallery .footer {
-  margin-top: 0 !important;
-}
-
-/* Disable default title decorations for gallery pages */
+/* 既存の装飾を無効化 */
 #page-gallery h1.section-title::after,
 #page-ai-gallery h2.section-title::after { 
   content: none !important; 

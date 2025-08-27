@@ -73,6 +73,11 @@
         </nav>
         <div class="full-page-grid" id="full-gallery-grid"></div>
       </div>
+      
+      <!-- Scroll to top button -->
+      <div class="view-all-container">
+        <a href="#" class="view-all-button scroll-to-top">先頭へ</a>
+      </div>
     </section>
   </main>
   <footer class="footer">
@@ -86,5 +91,21 @@
   <script src="./likes.js"></script>
   
   <script src="./main.js?v=20250814"></script>
+  
+  <script>
+    // Scroll to top functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollToTopBtn = document.querySelector('.scroll-to-top');
+      if (scrollToTopBtn) {
+        scrollToTopBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

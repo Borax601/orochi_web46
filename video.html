@@ -8,43 +8,7 @@
   <link rel="stylesheet" href="header-white.css?v=20250814">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap">
   <style>
-    /* === video.html 専用：toki & gallery と同じ見出し間隔へ === */
-
-    /* 固定ヘッダー分の上余白をこのページだけ無効化 */
-    body#page-video-gallery #main-content{
-      padding-top: 0 !important;
-    }
-
-    /* 見出し：toki & gallery と同じトーン・余白に統一 */
-    /* #page-video-gallery .section-title{
-      font-family: var(--font-title);
-      font-weight: 700;
-      font-size: clamp(2.0rem, 3.2vw, 2.8rem);
-      line-height: 1.25;
-      letter-spacing: 0.02em;
-      color: #372e51;
-
-      width: fit-content;
-      margin: 16px auto 32px;   /* 上:16 下:32 */
-      text-align: center;
-
-      background: transparent;  /* バッジ風装飾を外す */
-      padding: 0;
-      border-radius: 0;
-      box-shadow: none;
-      position: relative;
-    } */
-    /* #page-video-gallery .section-title::after{
-      content: "";
-      display: block;
-      width: 100%;
-      height: 6px;
-      margin-top: 18px;
-      border-radius: 9999px;
-      background: linear-gradient(90deg,#7d63ce,#a08ff0);
-    } */
-
-    /* 説明文も gallery / toki と同じ行幅・余白へ */
+    /* video.html 専用スタイル */
     #page-video-gallery .section-description{
       max-width: 72ch;
       margin: 0 auto 32px;
@@ -54,8 +18,9 @@
       text-align: left;
     }
 
-    /* 最初のセクションに外側 margin が乗っていた場合の保険（副作用なし） */
-    #page-video-gallery .content-section:first-of-type{ margin-top: 0; }
+    #page-video-gallery .content-section:first-of-type{ 
+      margin-top: 0; 
+    }
   </style>
 </head>
 <body id="page-video-gallery">
@@ -123,6 +88,11 @@
         <!-- 一覧：横スクロール用の gallery-grid ではなく full-page-grid を使用 -->
         <div class="full-page-grid" id="full-gallery-grid"></div>
       </div>
+      
+      <!-- Scroll to top button -->
+      <div class="view-all-container">
+        <a href="#" class="view-all-button scroll-to-top">先頭へ</a>
+      </div>
     </section>
   </main>
 
@@ -138,5 +108,21 @@
   <script src="./likes.js"></script>
   
   <script src="main.js?v=20250814"></script>
+  
+  <script>
+    // Scroll to top functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollToTopBtn = document.querySelector('.scroll-to-top');
+      if (scrollToTopBtn) {
+        scrollToTopBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>
