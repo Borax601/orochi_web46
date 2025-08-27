@@ -484,7 +484,7 @@ html.is-menu-open{
 /* #ai-corner の上パディング：80 → 40 に半減（既存） */
 #ai-corner,
 #video-corner{
-  padding-top: 40px !important;
+  padding: 40px 20px !important;
 }
 
 /* モバイルの微調整を #ai-corner に合わせる場合（任意・同値に） */

@@ -198,6 +198,11 @@ body.modal-open {
   text-align: left;
 }
 
+/* Portfolio section - 20px top spacing */
+section.content-section#portfolio {
+  padding-top: 20px !important;
+}
+
 /* 既存の装飾を無効化 */
 #page-gallery h1.section-title::after,
 #page-ai-gallery h2.section-title::after { 
@@ -426,8 +431,7 @@ body.modal-open {
 }
 
 /* --- セクション間隔 --- */
-#ai-corner,
-#video-corner {
+#ai-corner {
   margin-top: 72px;
 }
 
