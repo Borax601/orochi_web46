@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>動くオロチ奉納殿 – 全作品一覧</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="header-white.css?v=20250814">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap">
+  <style>
+    /* === video.html 専用：toki & gallery と同じ見出し間隔へ === */
+
+    /* 固定ヘッダー分の上余白をこのページだけ無効化 */
+    body#page-video-gallery #main-content{
+      padding-top: 0 !important;
+    }
+
+    /* 見出し：toki & gallery と同じトーン・余白に統一 */
+    /* #page-video-gallery .section-title{
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: clamp(2.0rem, 3.2vw, 2.8rem);
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+      color: #372e51;
+
+      width: fit-content;
+      margin: 16px auto 32px;   /* 上:16 下:32 */
+      text-align: center;
+
+      background: transparent;  /* バッジ風装飾を外す */
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      position: relative;
+    } */
+    /* #page-video-gallery .section-title::after{
+      content: "";
+      display: block;
+      width: 100%;
+      height: 6px;
+      margin-top: 18px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg,#7d63ce,#a08ff0);
+    } */
+
+    /* 説明文も gallery / toki と同じ行幅・余白へ */
+    #page-video-gallery .section-description{
+      max-width: 72ch;
+      margin: 0 auto 32px;
+      font-size: 1.06rem;
+      line-height: 1.9;
+      color: #555;
+      text-align: left;
+    }
+
+    /* 最初のセクションに外側 margin が乗っていた場合の保険（副作用なし） */
+    #page-video-gallery .content-section:first-of-type{ margin-top: 0; }
+  </style>
+</head>
+<body id="page-video-gallery">
+  <header class="global-header">
+    <div class="header-container">
+      <img src="./assets/header-subject.svg"
+           class="header-subject"
+           alt="開運オロチ神社"
+           loading="eager" decoding="async">
+
+      <button class="hamburger-menu" aria-label="メニューを開く" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="global-nav" aria-label="Main">
+        <ul class="menu">
+          <li><a href="./index.html">本殿</a></li>
+          <li class="has-submenu">
+            <a href="./gallery.html">作品</a>
+            <ul class="submenu">
+              <li><a href="./gallery.html">奉納作品</a></li>
+              <li><a href="./toki-sude-ni-orochi.html">時すでにオロチ</a></li>
+              <li><a href="./video.html">動くオロチ奉納殿</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://x.com/Borax601"
+               class="icon-link x"
+               aria-label="X"
+               target="_blank" rel="noopener noreferrer"><span>X</span></a>
+          </li>
+          <li>
+            <a href="https://suzuri.jp/Borax"
+               class="icon-link shop"
+               aria-label="Shop"
+               target="_blank" rel="noopener noreferrer" title="開運オロチ屋（SUZURI）">
+              <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6h14l-2 9H8L6 6Zm0 0H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="9" cy="20" r="1.6" fill="currentColor"></circle>
+                <circle cx="17" cy="20" r="1.6" fill="currentColor"></circle>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 2段目：山並み -->
+    <div class="header-ridge-row" aria-hidden="true">
+      <img src="./assets/header-img.svg" alt="" class="header-ridge-single">
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="content-section" id="full-gallery">
+      <div class="section-container">
+        <h1 class="section-title">全作品一覧</h1>
+        <p class="section-description">
+          動くオロチ奉納殿に奉納された映像作品のアーカイブです。
+        </p>
+
+        <!-- 月フィルタ（JSが注入/バインド） -->
+        <nav class="filter-bar"></nav>
+
+        <!-- 一覧：横スクロール用の gallery-grid ではなく full-page-grid を使用 -->
+        <div class="full-page-grid" id="full-gallery-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="copyright">© 2025 Kaiun Orochi Shrine | Created by Borax601</div>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+  
+  <!-- いいねシステム -->
+  <script src="./likes.js"></script>
+  
+  <script src="main.js?v=20250814"></script>
+</body>
+</html>

@@ -1,0 +1,2109 @@
+/* --- 基本スタイル --- */
+:root {
+  --font-base: 'Noto Sans JP', sans-serif;
+  --font-title: 'Shippori Mincho', serif;
+  --color-background: #FFFFFF;
+  --color-text: #333333;
+  --wagara-size: 768px;
+}
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+/* --- ヒーローセクション（キービジュアル）のスタイル --- */
+.hero-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  position: sticky;
+  top: 0;
+  position: relative;
+  background:
+    /* ほんのり白ベールで柄を柔らかく（任意） */
+    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
+    /* タイル表示 */
+    url('assets/wagara-bg.png') repeat;     /* 同一画像に統一（任意） */
+  background-size: 100% 100%, var(--wagara-size) var(--wagara-size);   /* 比率保持でタイル */
+  background-position: 0 0, 0 0;
+  background-attachment: scroll, scroll;
+}
+.hero-image-container {
+  position: relative;
+  width: 90%;
+  max-width: 450px;
+}
+.hero-torii, .hero-orochi {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+.hero-torii {
+  position: relative;
+  z-index: 1;
+}
+.hero-orochi {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out; /* Smooth transition */
+}
+/* --- ループアニメーション --- */
+@keyframes loop-ab {
+  0%, 49.9% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.is-looping#orochi-pose-a {
+  animation: loop-ab 2s infinite;
+  animation-delay: 0s;
+}
+.is-looping#orochi-pose-b {
+  animation: loop-ab 2s infinite;
+  animation-delay: 1s;
+}
+/* --- コンテンツセクションのスタイル --- */
+.content-section {
+  padding: 80px 20px;
+  background-color: transparent;   /* 上書き */
+  position: relative;
+  z-index: 10;
+}
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+h2.section-title {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 50px;
+  background-color: #7d63ce; /* 新しい指定された色 */
+  padding: 15px;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
+  margin-left: 40px;
+}
+/* --- ギャラリーセクションのスタイル --- */
+.horizontal-scroll-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+}
+.gallery-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    padding: 20px;
+    width: max-content;
+}
+.gallery-card {
+    background-color: #7d63ce;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    overflow: hidden;
+    width: 250px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* ← stretch → center に変更 */
+    justify-content: space-between;
+}
+.gallery-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+.card-info {
+    padding: 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.card-title, .card-description {
+    margin: 5px 0;
+}
+.card-title {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+}
+.card-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    color: #666;
+}
+.view-all-container {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;         /* 中央寄せ用 */
+    justify-content: center;
+}
+.view-all-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--color-text);
+    color: var(--color-background);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+}
+.view-all-button:hover {
+    opacity: 0.8;
+}
+@media (min-width: 768px) {
+  .view-all-container { margin-top: 1.5rem; } /* 約24px */
+}
+
+/* --- 微調整：ギャラリーアイコン --- */
+.gallery-icons {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+.like-btn {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #ff8a80;
+    transition: transform 0.2s, color 0.2s;
+}
+.like-btn:hover {
+    transform: scale(1.2);
+}
+.like-btn.is-liked {
+    color: #d32f2f;
+    cursor: default;
+}
+/* --- 微調整：スクロールバーのデザイン --- */
+.horizontal-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+/* --- 全作品一覧ページ用のスタイル --- */
+.page-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    height: 100px; /* Set base height for PC */
+}
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.back-to-home {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: bold;
+}
+.back-to-home:hover {
+    text-decoration: underline;
+}
+.section-description {
+    text-align: center;
+    max-width: 600px;
+    margin: -30px auto 50px;
+    color: #666;
+    line-height: 1.7;
+}
+.full-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+.footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 60px;
+    color: #999;
+    border-top: 1px solid #e0e0e0;
+}
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.filter-btn {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+.filter-btn:hover {
+    background-color: #f0f0f0;
+}
+.filter-btn.is-active {
+    background-color: var(--color-text);
+    color: #fff;
+    border-color: var(--color-text);
+}
+/* --------------------------------------------------
+   Portfolio section – wagara wallpaper
+-------------------------------------------------- */
+.content-section{
+  background-color: transparent;   /* 上書き */
+}
+#portfolio {
+  /* 背景は main-content で一括適用するため透明化 */
+  background: transparent;
+  padding: 20px;          /* 余白は維持 */
+}
+#main-content,
+#page-gallery #main-content,
+#page-ai-gallery #main-content {
+  background-size: 100% 100%, var(--wagara-size) var(--wagara-size);
+  background:
+    /* 可読性のためのごく薄い白ベール */
+    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
+    url('./assets/wagara-bg.png') repeat;
+  /* 画像は元が 1920×1032px。比率を保つため片側のみ指定し、もう片側は auto */
+  background-position: 0 0, 0 0;
+  background-attachment: scroll, scroll;
+}
+
+@media (max-width: 768px){
+  #main-content{
+    background-size: 100% 100%, 640px 640px;  /* 比率保持のまま縮小 */
+  }
+}
+
+#full-gallery.content-section {
+  /* 背景は main-content で統一する */
+  background: transparent !important;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* セクション側の背景は無効化して重ねを防止 */
+#portfolio,
+#full-gallery.content-section{
+  background: transparent !important;
+  padding-top: inherit;
+  padding-bottom: inherit;
+}
+/* --------------------------------------------------
+   Main area – wagara wallpaper
+-------------------------------------------------- */
+/* --- いいねボタンのポップアニメーション --- */
+@keyframes pop-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+.like-btn.is-popping {
+  animation: pop-animation 0.3s ease-in-out;
+}
+/* --- オロチのアニメーション --- */
+@keyframes orochi-fade-out {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+.fade-out {
+  animation: orochi-fade-out 1.2s ease-out forwards; /* ←ゆっくり消える */
+}
+/* --- gallery.html 背景 --- */
+#full-gallery.content-section {
+  /* 背景は main-content で統一する */
+  background: transparent !important;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* =================
+Global Header
+==================== */
+.global-header {
+    background-color: #372e51; /* 固定された濃い紫色 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 0 20px;
+}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 90px; /* 60px → 90px */
+    padding: 0 20px;
+}
+.site-title {
+    font-size: 1.95rem; /* 1.5rem の 130% */
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 0;
+}
+.global-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.global-nav li {
+    margin-left: 30px;
+}
+.global-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+.global-nav a:hover,
+.global-nav a.active {
+    border-bottom-color: #fff;
+}
+.hamburger-menu {
+    display: none;
+}
+@media (max-width: 768px) {
+    .global-nav {
+        display: none;
+    }
+    .hamburger-menu {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1100;
+        width: 44px;
+        height: 44px;
+        padding: 6px;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .hamburger-menu span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        margin: 5px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+    .hamburger-menu.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger-menu.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-menu.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+    .global-nav.active {
+        display: block;
+        position: absolute;
+        top: 90px; /* 60px → 90px */
+        right: 0;
+        background-color: #372e51;
+        width: 100%;
+        text-align: center;
+    }
+    .global-nav ul {
+        flex-direction: column;
+    }
+    .global-nav li {
+        margin: 10px 0;
+    }
+}
+/* --- ニュースセクションのスタイル --- */
+.news-section {
+    background-color: #fff;
+    padding: 45px;
+    text-align: center;
+    margin: -30px 0 40px 0;
+    border-radius: 8px;
+    box-shadow: none;
+}
+.news-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+.news-container p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+/* Art Shrine 見出し：#portfolio 限定で左寄せ・細身化 */
+#portfolio h2.section-title{
+  display: inline-block;        /* 内容幅に縮める */
+  width: fit-content;
+  max-width: min(720px, 90%);
+  margin: 24px 0 40px 0;           /* 左寄せ */
+  text-align: left;
+
+  background: #7d63ce;          /* 既存キーカラーを踏襲 */
+  color: #fff;
+  padding: 12px 28px;           /* 面積を絞って軽量化 */
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  letter-spacing: 0.02em;
+}
+
+/* （任意）SPを中央寄せに戻す場合は有効化 */
+@media (max-width: 768px){
+  #portfolio h2.section-title{
+    display: block;
+    width: 100%;
+    margin: 0 0 28px 0;
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 14px;
+  }
+}
+
+/* ===== HOME (#portfolio) のみ：横スクロール→グリッド化 ===== */
+#portfolio .horizontal-scroll-container{
+  overflow: visible;            /* スクロールUIを消す */
+  padding: 0;                   /* 余白もリセットしてカード側で管理 */
+}
+
+#portfolio .gallery-grid{
+  display: grid !important;     /* 既存 flex を上書き */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 240→260 */
+  gap: 28px;                    /* カード間隔。24〜32の範囲で微調整可 */
+  padding: 0;                   /* 既存 20px を0にして外周をすっきり */
+  width: 100%;                  /* max-content を解除 */
+}
+
+/* カード：白地・薄影・コンパクト */
+#portfolio .gallery-card{
+  background: #fff;             /* 紫ベタ面を白に */
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;                /* 20px → 16pxで締める */
+  width: auto;                  /* 250px固定を解除 */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* 中身の高さで伸縮 */
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#portfolio .gallery-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 画像：フレーム風に見せる（HTMLはそのまま） */
+#portfolio .gallery-card .card-image{
+  width: 100%;
+  height: auto;                 /* 280px固定を解除 */
+  aspect-ratio: 1 / 1;          /* 正方に揃え、縦長画像も整う */
+  object-fit: cover;            /* 作品の切れを避けたい場合は contain に */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  padding: 8px;                 /* “額縁”っぽい余白 */
+  margin-bottom: 12px;
+}
+
+/* テキストブロックは既存構造を維持して軽量化 */
+#portfolio .card-info{
+  padding: 0;                   /* 10px → 0 */
+  align-items: flex-start;      /* 左寄せ */
+  text-align: left;             /* 中央 → 左 */
+}
+#portfolio .card-title{
+  font-size: 1.05rem;           /* 1.2rem → 少し締める */
+  margin: 0 0 6px;
+}
+#portfolio .card-description{
+  font-size: .92rem;            /* 0.9rem付近を維持、やや濃いめの本文色 */
+  color: #555;
+  line-height: 1.7;
+}
+
+/* いいね行：境界線を弱め、右端寄せは維持 */
+#portfolio .gallery-icons{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);  /* #eee を薄く */
+  text-align: right;
+}
+
+/* ===== Gallery page 専用 見出し・説明 ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  color: #372e51;              /* 見出し文字色：濃い紫系 */
+  margin: 0;                   /* pとの距離はp側で調整 */
+  text-align: left;
+  background: transparent;     /* 共通の紫バナーを無効化 */
+  padding: 0;                  /* 余白もリセット */
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 88px;                 /* アクセントの長さ */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce, #a08ff0); /* 既存キーカラー由来 */
+}
+
+/* 説明文：読みやすい行幅と行間 */
+#page-gallery .section-description{
+  margin: 18px 0 36px 0;
+  max-width: 60ch;             /* 行幅制御で読みやすく */
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* モバイルは中央寄せで柔らかく */
+@media (max-width: 768px){
+  #page-gallery h1.section-title{ text-align: center; }
+  #page-gallery h1.section-title::after{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #page-gallery .section-description{
+    margin: 16px auto 32px;
+    text-align: left;          /* 可読性優先で本文は左寄せのまま */
+  }
+}
+
+/* ===== Gallery page 専用: 見出しと説明（他ページへ影響なし） ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.0rem, 3.2vw, 2.8rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #372e51;
+  /* 中央配置＋上下余白 */
+  width: fit-content;
+  margin: 16px auto 32px;   /* 上:16, 下:32 */
+  text-align: center;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+/* 下線は見出し幅にフィット（HTMLにタグは不要。CSSの ::after 疑似要素で描画） */
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 100%;              /* 文字幅ちょうど */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce,#a08ff0);
+}
+
+/* 説明文：左寄せ・読みやすい行幅と余白 */
+#page-gallery .section-description{
+  max-width: 72ch;          /* 行幅を最適化 */
+  margin: 0 auto 32px;
+  font-size: 1.06rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}
+
+/* フィルタバーとグリッドとの距離調整（任意だが推奨） */
+#page-gallery nav.filter-bar{
+  margin: 0 0 36px 0;
+}
+
+/* ==== AIコーナー（時すでにオロチ） ===================== */
+#ai-corner {
+  margin-top: 72px;              /* 上の「全ての作品を見る」と余白をとる */
+}
+
+/* Art Shrine と 時すでにオロチ のタイトルを共通バッジに統一 */
+#portfolio h2.section-title,
+#ai-corner h2.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem); /* Art Shrine と同じサイズ感 */
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+
+  width: fit-content;
+  margin: 24px 0 24px;   /* 左寄せ・上下余白 */
+  text-align: left;
+}
+
+/* モバイルは中央寄せに倒す（任意） */
+@media (max-width: 768px){
+  #portfolio h2.section-title,
+  #ai-corner h2.section-title{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+#ai-corner .section-description {
+  max-width: 72ch;               /* 読みやすい行幅 */
+  margin: 0 auto 64px;           /* 中央寄せ & 下に十分な余白 */
+  text-align: center;            /* トップページは中央に揃えて品よく */
+  line-height: 1.9;
+  color: #555;                   /* 既存より一段柔らかいトーン */
+}
+
+/* ===== HOME (#portfolio) のみ：横スクロール→グリッド化 ===== */
+#portfolio .horizontal-scroll-container{
+  overflow: visible;            /* スクロールUIを消す */
+  padding: 0;                   /* 余白もリセットしてカード側で管理 */
+}
+
+#portfolio .gallery-grid{
+  display: grid !important;     /* 既存 flex を上書き */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 240→260 */
+  gap: 28px;                    /* カード間隔。24〜32の範囲で微調整可 */
+  padding: 0;                   /* 既存 20px を0にして外周をすっきり */
+  width: 100%;                  /* max-content を解除 */
+}
+
+/* カード：白地・薄影・コンパクト */
+#portfolio .gallery-card{
+  background: #fff;             /* 紫ベタ面を白に */
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;                /* 20px → 16pxで締める */
+  width: auto;                  /* 250px固定を解除 */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* 中身の高さで伸縮 */
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#portfolio .gallery-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 画像：フレーム風に見せる（HTMLはそのまま） */
+#portfolio .gallery-card .card-image{
+  width: 100%;
+  height: auto;                 /* 280px固定を解除 */
+  aspect-ratio: 1 / 1;          /* 正方に揃え、縦長画像も整う */
+  object-fit: cover;            /* 作品の切れを避けたい場合は contain に */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  padding: 8px;                 /* “額縁”っぽい余白 */
+  margin-bottom: 12px;
+}
+
+/* テキストブロックは既存構造を維持して軽量化 */
+#portfolio .card-info{
+  padding: 0;                   /* 10px → 0 */
+  align-items: flex-start;      /* 左寄せ */
+  text-align: left;             /* 中央 → 左 */
+}
+#portfolio .card-title{
+  font-size: 1.05rem;           /* 1.2rem → 少し締める */
+  margin: 0 0 6px;
+}
+#portfolio .card-description{
+  font-size: .92rem;            /* 0.9rem付近を維持、やや濃いめの本文色 */
+  color: #555;
+  line-height: 1.7;
+}
+
+/* いいね行：境界線を弱め、右端寄せは維持 */
+#portfolio .gallery-icons{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);  /* #eee を薄く */
+  text-align: right;
+}
+
+/* ===== Gallery page 専用 見出し・説明 ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  color: #372e51;              /* 見出し文字色：濃い紫系 */
+  margin: 0;                   /* pとの距離はp側で調整 */
+  text-align: left;
+  background: transparent;     /* 共通の紫バナーを無効化 */
+  padding: 0;                  /* 余白もリセット */
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 88px;                 /* アクセントの長さ */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce, #a08ff0); /* 既存キーカラー由来 */
+}
+
+/* 説明文：読みやすい行幅と行間 */
+#page-gallery .section-description{
+  margin: 18px 0 36px 0;
+  max-width: 60ch;             /* 行幅制御で読みやすく */
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* モバイルは中央寄せで柔らかく */
+@media (max-width: 768px){
+  #page-gallery h1.section-title{ text-align: center; }
+  #page-gallery h1.section-title::after{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #page-gallery .section-description{
+    margin: 16px auto 32px;
+    text-align: left;          /* 可読性優先で本文は左寄せのまま */
+  }
+}
+
+/* ===== Gallery page 専用: 見出しと説明（他ページへ影響なし） ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.0rem, 3.2vw, 2.8rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #372e51;
+  /* 中央配置＋上下余白 */
+  width: fit-content;
+  margin: 16px auto 32px;   /* 上:16, 下:32 */
+  text-align: center;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+/* 下線は見出し幅にフィット（HTMLにタグは不要。CSSの ::after 疑似要素で描画） */
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 100%;              /* 文字幅ちょうど */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce,#a08ff0);
+}
+
+/* 説明文：左寄せ・読みやすい行幅と余白 */
+#page-gallery .section-description{
+  max-width: 72ch;          /* 行幅を最適化 */
+  margin: 0 auto 32px;
+  font-size: 1.06rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}
+
+/* フィルタバーとグリッドとの距離調整（任意だが推奨） */
+#page-gallery nav.filter-bar{
+  margin: 0 0 36px 0;
+}
+
+/* ==== AIコーナー（時すでにオロチ） ===================== */
+#ai-corner {
+  margin-top: 72px;              /* 上の「全ての作品を見る」と余白をとる */
+}
+
+/* Art Shrine と 時すでにオロチ のタイトルを共通バッジに統一 */
+#portfolio h2.section-title,
+#ai-corner h2.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem); /* Art Shrine と同じサイズ感 */
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+
+  width: fit-content;
+  margin: 24px 0 24px;   /* 左寄せ・上下余白 */
+  text-align: left;
+}
+
+/* モバイルは中央寄せに倒す（任意） */
+@media (max-width: 768px){
+  #portfolio h2.section-title,
+  #ai-corner h2.section-title{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+#ai-corner .section-description {
+  max-width: 72ch;               /* 読みやすい行幅 */
+  margin: 0 auto 64px;           /* 中央寄せ & 下に十分な余白 */
+  text-align: center;            /* トップページは中央に揃えて品よく */
+  line-height: 1.9;
+  color: #555;                   /* 既存より一段柔らかいトーン */
+}
+
+/* ===== HOME (#portfolio) のみ：横スクロール→グリッド化 ===== */
+#portfolio .horizontal-scroll-container{
+  overflow: visible;            /* スクロールUIを消す */
+  padding: 0;                   /* 余白もリセットしてカード側で管理 */
+}
+
+#portfolio .gallery-grid{
+  display: grid !important;     /* 既存 flex を上書き */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 240→260 */
+  gap: 28px;                    /* カード間隔。24〜32の範囲で微調整可 */
+  padding: 0;                   /* 既存 20px を0にして外周をすっきり */
+  width: 100%;                  /* max-content を解除 */
+}
+
+/* カード：白地・薄影・コンパクト */
+#portfolio .gallery-card{
+  background: #fff;             /* 紫ベタ面を白に */
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;                /* 20px → 16pxで締める */
+  width: auto;                  /* 250px固定を解除 */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* 中身の高さで伸縮 */
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#portfolio .gallery-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 画像：フレーム風に見せる（HTMLはそのまま） */
+#portfolio .gallery-card .card-image{
+  width: 100%;
+  height: auto;                 /* 280px固定を解除 */
+  aspect-ratio: 1 / 1;          /* 正方に揃え、縦長画像も整う */
+  object-fit: cover;            /* 作品の切れを避けたい場合は contain に */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  padding: 8px;                 /* “額縁”っぽい余白 */
+  margin-bottom: 12px;
+}
+
+/* テキストブロックは既存構造を維持して軽量化 */
+#portfolio .card-info{
+  padding: 0;                   /* 10px → 0 */
+  align-items: flex-start;      /* 左寄せ */
+  text-align: left;             /* 中央 → 左 */
+}
+#portfolio .card-title{
+  font-size: 1.05rem;           /* 1.2rem → 少し締める */
+  margin: 0 0 6px;
+}
+#portfolio .card-description{
+  font-size: .92rem;            /* 0.9rem付近を維持、やや濃いめの本文色 */
+  color: #555;
+  line-height: 1.7;
+}
+
+/* いいね行：境界線を弱め、右端寄せは維持 */
+#portfolio .gallery-icons{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);  /* #eee を薄く */
+  text-align: right;
+}
+
+/* ===== Gallery page 専用 見出し・説明 ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  color: #372e51;              /* 見出し文字色：濃い紫系 */
+  margin: 0;                   /* pとの距離はp側で調整 */
+  text-align: left;
+  background: transparent;     /* 共通の紫バナーを無効化 */
+  padding: 0;                  /* 余白もリセット */
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 88px;                 /* アクセントの長さ */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce, #a08ff0); /* 既存キーカラー由来 */
+}
+
+/* 説明文：読みやすい行幅と行間 */
+#page-gallery .section-description{
+  margin: 18px 0 36px 0;
+  max-width: 60ch;             /* 行幅制御で読みやすく */
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* モバイルは中央寄せで柔らかく */
+@media (max-width: 768px){
+  #page-gallery h1.section-title{ text-align: center; }
+  #page-gallery h1.section-title::after{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #page-gallery .section-description{
+    margin: 16px auto 32px;
+    text-align: left;          /* 可読性優先で本文は左寄せのまま */
+  }
+}
+
+/* ===== Gallery page 専用: 見出しと説明（他ページへ影響なし） ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.0rem, 3.2vw, 2.8rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #372e51;
+  /* 中央配置＋上下余白 */
+  width: fit-content;
+  margin: 16px auto 32px;   /* 上:16, 下:32 */
+  text-align: center;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+/* 下線は見出し幅にフィット（HTMLにタグは不要。CSSの ::after 疑似要素で描画） */
+#page-gallery h1.section-title::after{
+  content: "";
+  display: block;
+  width: 100%;              /* 文字幅ちょうど */
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,#7d63ce,#a08ff0);
+}
+
+/* 説明文：左寄せ・読みやすい行幅と余白 */
+#page-gallery .section-description{
+  max-width: 72ch;          /* 行幅を最適化 */
+  margin: 0 auto 32px;
+  font-size: 1.06rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}
+
+/* フィルタバーとグリッドとの距離調整（任意だが推奨） */
+#page-gallery nav.filter-bar{
+  margin: 0 0 36px 0;
+}
+
+/* ==== AIコーナー（時すでにオロチ） ===================== */
+#ai-corner {
+  margin-top: 72px;              /* 上の「全ての作品を見る」と余白をとる */
+}
+
+/* Art Shrine と 時すでにオロチ のタイトルを共通バッジに統一 */
+#portfolio h2.section-title,
+#ai-corner h2.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem); /* Art Shrine と同じサイズ感 */
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+
+  width: fit-content;
+  margin: 24px 0 24px;   /* 左寄せ・上下余白 */
+  text-align: left;
+}
+
+/* モバイルは中央寄せに倒す（任意） */
+@media (max-width: 768px){
+  #portfolio h2.section-title,
+  #ai-corner h2.section-title{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+#ai-corner .section-description {
+  max-width: 72ch;               /* 読みやすい行幅 */
+  margin: 0 auto 64px;           /* 中央寄せ & 下に十分な余白 */
+  text-align: center;            /* トップページは中央に揃えて品よく */
+  line-height: 1.9;
+  color: #555;                   /* 既存より一段柔らかいトーン */
+}
+
+/* ===== HOME: 奉納作品 説明文 ===== */
+#portfolio .section-description{
+  max-width: 72ch;      /* 可読行幅 */
+  margin: 0 0 28px 0;   /* 下に余白 */
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;     /* 左寄せ */
+}
+
+/* ==== AIコーナー（時すでにオロチ） ==== */
+#ai-corner {
+  margin-top: 72px;
+}
+
+/* 見出しは他と同サイズ。整列と余白のみ調整 */
+#ai-corner .section-title{
+  text-align: left;     /* 中央 → 左 */
+  margin: 24px 0 16px 0;   /* 上下余白 */
+}
+
+/* 説明文：左寄せに統一（中央指定を撤回） */
+#ai-corner .section-description{
+  max-width: 72ch;
+  margin: 0 0 48px 0;
+  text-align: left;     /* 中央 → 左 */
+  line-height: 1.9;
+  color: #555;
+}
+
+/* Remove wagara background from body */
+/* body {
+  background: url('assets/wagara-bg.png') repeat;
+} */
+
+.hero-section{
+  background: #fff !important;
+}
+
+/* index 専用の和柄。歪み防止のため片側 auto で比率維持 */
+#main-content{
+  background-size: 100% 100%, var(--wagara-size) var(--wagara-size);
+  background:
+    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
+    url('assets/wagara-bg.png') repeat;
+  background-position: 0 0, 0 0;
+  background-attachment: scroll, scroll;
+}
+
+#page-gallery #main-content{
+  background-size: 100% 100%, var(--wagara-size) var(--wagara-size);
+  background:
+    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
+    url('assets/wagara-bg.png') repeat;
+  background-position: 0 0, 0 0;
+  background-attachment: scroll, scroll;
+}
+
+@media (max-width: 768px){
+  #main-content{ background-size: 100% 100%, 640px 640px; }
+}
+
+/* ===== AI Gallery page – heading / description ===== */
+#page-ai-gallery h2.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.0rem, 3.2vw, 2.8rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #372e51;
+
+  width: fit-content;          /* 文字幅ちょうど */
+  margin: 16px auto 32px;      /* 中央寄せ (auto) */
+  text-align: center;
+
+  background: transparent;     /* 紫バナー無効 */
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+}
+/* 下線を文字幅に合わせて描画 */
+#page-ai-gallery h2.section-title::after{
+  content: "";
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #7d63ce, #a08ff0);
+}
+
+/* 説明文も中央基準の余白に合わせる */
+#page-ai-gallery .section-description{
+  max-width: 72ch;
+  margin: 0 auto 36px;
+  font-size: 1.06rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}
+
+/* 1) 横スクロール解除 + 余白リセット */
+#portfolio .horizontal-scroll-container,
+#ai-corner   .horizontal-scroll-container,
+#video-corner .horizontal-scroll-container{
+   overflow: visible;
+   padding: 0;
+}
+
+/* 2) グリッド化 */
+#portfolio .gallery-grid,
+#ai-corner   .gallery-grid,
+#video-corner .gallery-grid{
+   display: grid !important;
+   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 240→260 */
+   column-gap: 28px;
+   row-gap: 28px;
+   padding: 0;
+   width: 100%;
+}
+
+/* 3) カード全体スタイル（白背景・影など） */
+#portfolio .gallery-card,
+#ai-corner   .gallery-card,
+#video-corner .gallery-card{
+   background: #fff;
+   color: #333;
+   border-radius: 14px;
+   border: 1px solid rgba(0,0,0,.05);
+   box-shadow: 0 8px 20px rgba(0,0,0,.06);
+   padding: 16px;
+   width: auto;
+   height: auto;
+   display: flex;
+   flex-direction: column;
+   align-items: center;         /* 中身の高さで伸縮 */
+   transition: transform .15s ease, box-shadow .15s ease;
+}
+#portfolio .gallery-card:hover,
+#ai-corner   .gallery-card:hover,
+#video-corner .gallery-card:hover{
+   transform: translateY(-2px);
+   box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 4) 画像フレーム調整 */
+#portfolio   .gallery-card .card-image,
+#ai-corner   .gallery-card .card-image,
+#video-corner .gallery-card .card-image,
+#digest-gallery-grid .gallery-card .card-image,
+#ai-digest-grid      .gallery-card .card-image {
+  /* ===== サイズとセンタリング ===== */
+  width: 100%;             /* カード幅いっぱい（※max-widthで縛る） */
+  max-width: 224px;        /* 全作品 224×224 フレームに統一 */
+  aspect-ratio: 1 / 1;     /* 正方形フレーム */
+  height: auto;            /* object-fit と併用で歪み無し */
+
+  object-fit: contain;     /* 作品を切らずに収める */
+  display: block;
+  margin: 0 auto;          /* 常に左右中央 */
+
+  /* ===== 額縁・ドロップシャドウ ===== */
+  padding: 8px;            /* 白フチ */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* 5) テキスト＆like 行 */
+#portfolio .card-info,
+#ai-corner   .card-info,
+#video-corner .card-info{
+   padding: 0;
+   align-items: center;   /* ← stretch → center に変更 */
+   text-align: center;
+}
+#portfolio .card-title,
+#ai-corner   .card-title,
+#video-corner .card-title{ font-size: 1.05rem; margin: 0 0 6px; }
+#portfolio .card-description,
+#ai-corner   .card-description,
+#video-corner .card-description{ font-size: .92rem; color:#555; line-height:1.7; }
+
+/* いいね行：境界線を弱め、右端寄せは維持 */
+#portfolio .gallery-icons,
+#ai-corner   .gallery-icons,
+#video-corner .gallery-icons{
+   margin-top: 12px;
+   padding-top: 10px;
+   border-top: 1px solid rgba(0,0,0,.06);
+   text-align: right;
+}
+
+/* ===== Hero Intro ===== */
+.intro-section{
+  text-align:center;
+  padding:0 20px 20px;
+  background:#fff;
+  font-family: var(--font-base);
+  height: 220px;
+  position:relative;
+  overflow:hidden;
+  display:flex;justify-content:center;align-items:center;
+}
+
+.intro-line, .intro-block p{
+  opacity:0;
+  margin:8px 0;
+  font-size:clamp(1.1rem,2.0vw,1.4rem);
+  line-height:1.8;
+}
+
+@keyframes fadeIn {from{opacity:0;} to{opacity:1;} }
+@keyframes fadeOut{from{opacity:1;} to{opacity:0;} }
+
+.fade-in { animation: fadeIn 0.8s forwards; }
+.fade-out{ animation: fadeOut 0.6s forwards; }
+
+/* ===== Hero Intro (single-spot) ===== */
+.intro-section{
+  position:relative;
+  height:220px;                    /* 固定高さで余白ゼロ */
+  overflow:hidden;
+  background:#fff;
+  display:flex;justify-content:center;align-items:center;
+}
+
+.intro-step{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;
+  gap:4px;
+  opacity:0;
+  filter:blur(3px);
+}
+
+.intro-step p{
+  margin:4px 0;
+  font-size:clamp(1.15rem,2.1vw,1.5rem);
+  line-height:1.8;
+  color:#333;
+}
+
+/* アニメーション */
+@keyframes fadeInBlur{
+  0%   {opacity:0; filter:blur(6px);}
+  80%  {opacity:1; filter:blur(0);}
+  100% {opacity:1; filter:blur(0);}
+}
+@keyframes fadeOutBlur{
+  0%   {opacity:1; filter:blur(0);}
+  100% {opacity:0; filter:blur(6px);}
+}
+
+.fade-in { animation:fadeInBlur .8s forwards ease-out; }
+.fade-out{ animation:fadeOutBlur .6s forwards ease-in; }
+
+#hero-intro{
+  margin-top: -42px;
+  padding: 0 20px 20px;
+  min-height: 120px;
+}
+
+/* ==== Higher-contrast description box ===================== */
+.section-description{
+  position:relative;
+  color:#372e51;
+  background:rgba(255,255,255,0.88);
+  padding:16px 20px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  font-weight:500;
+  text-shadow:0 1px 2px rgba(255,255,255,0.6);
+  line-height:1.85;
+  max-width:720px;
+  margin:0 auto 32px;
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+
+/* ===== Gallery 一覧 (#full-gallery-grid) を HOME と同じ見た目にそろえる ===== */
+
+/* 1) カードの外観（HOMEの白カード＋薄影に合わせる） */
+#full-gallery-grid .gallery-card {
+  background: #fff;
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;           /* 中身を中央に */
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#full-gallery-grid .gallery-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 2) 画像フレーム（正方・中央・切り抜かない） */
+#full-gallery-grid .gallery-card .card-image {
+  width: 100%;
+  max-width: 224px;              /* HOME と同じ 224 枠 */
+  aspect-ratio: 1 / 1;           /* 正方形フレーム */
+  height: auto;
+  object-fit: contain;           /* 作品を切らずに収める */
+  display: block;
+  margin: 0 auto;
+
+  /* 額縁スタイル */
+  padding: 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  margin-bottom: 12px;
+}
+
+/* 3) テキストとlike行（HOMEの中央寄せに合わせる） */
+#full-gallery-grid .card-info {
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+#full-gallery-grid .card-title { font-size: 1.05rem; margin: 0 0 6px; }
+#full-gallery-grid .card-description { font-size: .92rem; color:#555; line-height:1.7; }
+#full-gallery-grid .gallery-icons {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  text-align: right;
+}
+
+/* ===== gallery 見出しを HOME の「奉納作品」と同じバッジ型に統一 ===== */
+#page-gallery h1.section-title {
+  display: inline-block;        /* 内容幅に縮める（HOMEと同じ） */
+  width: fit-content;
+  max-width: min(720px, 90%);
+  margin: 24px 0 40px 0;        /* 左寄せ・下余白（HOMEと同じ） */
+  text-align: left;
+
+  background: #7d63ce;          /* 既存キーカラー */
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  letter-spacing: 0.02em;
+}
+
+/* 下線バーは不要（バッジに重なるため打ち消す） */
+#page-gallery h1.section-title::after {
+  content: none !important;
+}
+
+/* ===== FINAL OVERRIDE: gallery 見出しを「奉納作品」と同じピル型に固定 ===== */
+#page-gallery h1.section-title,
+.page-header h1.section-title {
+  display: inline-block !important;
+  width: fit-content !important;
+  margin: 0 0 50px 40px !important;   /* 左 40px、下 50px 余白 */
+  padding: 12px 28px !important;
+
+  font-family: var(--font-title) !important;
+  font-size: 2.5rem !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+  color: #fff !important;
+
+  background: #7d63ce !important;    /* 紫バッジ */
+  border-radius: 9999px !important;   /* ピル型 */
+  box-shadow: 0 4px 6px rgba(0,0,0,.1) !important;
+  text-align: left !important;
+}
+
+/* 既存の “下線バー” などを抑止 */
+#page-gallery h1.section-title::after,
+.page-header h1.section-title::after {
+  content: none !important;
+}
+
+/* === UNIFY: 見出しを全ページ同じ“紫ピル”に統一（index & gallery） === */
+/* 対象: index の #portfolio / #ai-corner, gallery の #page-gallery */
+#portfolio h2.section-title,
+#ai-corner h2.section-title,
+#page-gallery h1.section-title {
+  display: inline-block !important;
+  width: fit-content !important;
+  /* 位置と余白を共通化（左寄せ・上下だけ統一） */
+  margin: 24px 0 40px !important;
+  text-align: left !important;
+
+  /* ピル型の見た目 */
+  background: #7d63ce !important;
+  color: #fff !important;
+  padding: 12px 28px !important;
+  border-radius: 16px !important;        /* index の雰囲気に合わせて角は16px */
+  box-shadow: 0 6px 14px rgba(0,0,0,.12) !important;
+
+  /* タイポ（サイズは各ページの既存値を極力尊重） */
+  font-family: var(--font-title) !important;
+  line-height: 1.2 !important;
+  letter-spacing: .02em !important;
+}
+
+/* gallery に残っている“下線バー”などの装飾を必ず無効化 */
+#page-gallery h1.section-title::after { content: none !important; }
+
+/* ===== FIX: wagara タイルの縦横比崩れを防ぐ（縦基準・横auto） ===== */
+/* 和柄サイズ変数（既に定義があればそのままでOK） */
+/* :root { --wagara-size: 768px; } */
+
+/* ① ヒーロー帯（index 上部） */
+.hero-section {
+  /* 1層目=白ベール → 画面にフィット
+     2層目=和柄タイル → 縦だけ固定、横はautoで比率維持、全面リピート */
+  background-repeat: no-repeat, repeat !important;
+  background-size: 100% 100%, auto var(--wagara-size) !important;
+  background-position: 0 0, 0 0 !important;
+}
+
+/* ② 本文エリア（index / gallery など） */
+#main-content {
+  background-repeat: no-repeat, repeat !important;
+  background-size: 100% 100%, auto var(--wagara-size) !important;
+  background-position: 0 0, 0 0 !important;
+}
+
+/* ③ モバイルはタイルを少し小さく（見栄え最適化） */
+@media (max-width: 768px){
+  .hero-section,
+  #main-content {
+    background-size: 100% 100%, auto 640px !important;
+  }
+}
+
+#page-gallery #main-content { 
+  background-repeat: no-repeat, repeat !important;
+  background-size: 100% 100%, auto var(--wagara-size) !important;
+  background-position: 0 0, 0 0 !important;
+}
+
+/* === GALLERY TITLE: match HOME (#portfolio) spec exactly ================== */
+/* Desktop と Mobile の挙動を index.html の「奉納作品」に合わせて完全一致させる */
+
+#page-gallery h1.section-title{
+  /* タイポ & レイアウト（HOMEと同じ） */
+  font-family: var(--font-title) !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem) !important; /* ← 可変サイズ */
+  line-height: 1.2 !important;
+  letter-spacing: .02em !important;
+
+  /* ピル型の見た目（HOMEと同じ） */
+  color: #fff !important;
+  background: #7d63ce !important;
+  padding: 10px 20px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10) !important;
+
+  /* 位置/余白（HOMEと同じ：左寄せベース） */
+  width: fit-content !important;
+  margin: 24px 0 24px !important;
+  text-align: left !important;
+}
+
+/* Mobile の挙動も HOME と同一に（中央寄せ＆余白を変更） */
+@media (max-width: 768px){
+  #page-gallery h1.section-title{
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 28px 0 !important;     /* 上0 / 下28 */
+    text-align: center !important;
+    padding: 14px 20px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* === GALLERY: 説明文を HOME(#portfolio) と同じ左寄せ仕様に統一 ================= */
+/* index.html の #portfolio .section-description と同等の見え方にする（左寄せ／幅／行間） */
+#full-gallery .section-description{
+  max-width: 72ch;            /* 可読行幅（HOMEと同じ） */
+  margin: 0 0 28px 0 !important;  /* 左寄せ配置：中央寄せの auto を打ち消す */
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left !important;    /* HOME と同じく左寄せ */
+}
+
+/*（任意）SP時の余白微調整が必要なら下記を有効化
+@media (max-width: 768px){
+  #full-gallery .section-description{
+    margin: 8px 0 24px 0 !important;
+  }
+}
+*/
+
+/* === AI 全作品一覧タイトルを gallery と同仕様に統一 ===================== */
+/* 見出し（ピル型＋可変フォント） */
+#page-ai-gallery h2.section-title{
+  /* タイポ（gallery の最終仕様に合わせる） */
+  font-family: var(--font-title) !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem) !important; /* 可変 */
+  line-height: 1.2 !important;
+  letter-spacing: .02em !important;
+
+  /* ピル型見た目（紫バッジ） */
+  color: #fff !important;
+  background: #7d63ce !important;
+  padding: 10px 20px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10) !important;
+
+  /* 配置（PC 左寄せ / SP 中央は下の MQ で） */
+  width: fit-content !important;
+  margin: 24px 0 24px !important;
+  text-align: left !important;
+}
+
+/* 既存の下線装飾を打ち消す */
+#page-ai-gallery h2.section-title::after{
+  content: none !important;
+}
+
+/* スマホ幅では中央寄せ（gallery と同様の挙動に） */
+@media (max-width: 768px){
+  #page-ai-gallery h2.section-title{
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 28px 0 !important;
+    text-align: center !important;
+    padding: 14px 20px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* === 説明文の揃え方（gallery と同じ “左寄せ・行幅・行間”） ============== */
+/* AI ページの説明文は #full-gallery 配下にあるため、gallery と同じセレクタで統一可能 */
+#page-ai-gallery #full-gallery .section-description{
+  max-width: 72ch;
+  margin: 0 0 28px 0 !important;     /* 左寄せ配置 */
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left !important;
+}
+
+/* ==== Lightbox (Orochi) =================================================== */
+body.modal-open { overflow: hidden; }
+
+.orochi-lightbox {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,.78);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.orochi-lightbox.open { display: flex; }
+
+.orochi-lightbox__content {
+  position: relative; max-width: 90vw; max-height: 90vh;
+  display: flex; flex-direction: column; align-items: center;
+  z-index: 0;
+}
+
+.orochi-lightbox__img {
+  max-width: 90vw; max-height: 80vh;
+  display: block; margin: 0 auto;
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  z-index: 1;
+}
+
+.orochi-lightbox__video {
+  max-width: 90vw; max-height: 80vh;
+  display: block; margin: 0 auto;
+  background: #000; border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  z-index: 1;
+}
+
+.orochi-lightbox__caption{
+  margin-top: 12px; color: #fff; text-align: center;
+  font-size: .95rem; line-height: 1.5; max-width: 80vw;
+}
+
+/* Controls */
+.orochi-lightbox__close,
+.orochi-lightbox__prev,
+.orochi-lightbox__next {
+  position: absolute; top: 12px;
+  background: rgba(0,0,0,.55); color: #fff;
+  border: none; width: 40px; height: 40px;
+  border-radius: 9999px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  z-index: 3;
+  pointer-events: auto;
+}
+.orochi-lightbox__close { right: 12px; }
+.orochi-lightbox__prev,
+.orochi-lightbox__next { top: 50%; transform: translateY(-50%); }
+.orochi-lightbox__prev { left: -56px; }
+.orochi-lightbox__next { right: -56px; }
+
+@media (max-width: 768px){
+  .orochi-lightbox__prev { left: 8px; }
+  .orochi-lightbox__next { right: 8px; }
+}
+
+/* ==== HOME 見出しの共通ピル型に video-corner を追加 ==== */
+#portfolio h2.section-title,
+#ai-corner h2.section-title,
+#video-corner h2.section-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+  width: fit-content;
+  margin: 24px 0 24px;
+  text-align: left;
+}
+
+/* 説明文も HOME と同じ読みやすさに揃える */
+#video-corner .section-description {
+  max-width: 72ch;
+  margin: 0 0 48px 0;  /* 「全ての作品を見る」直上と同じ余白テイスト */
+  text-align: left;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* グリッドの見え方は #portfolio / #ai-corner と同じにする（将来JSで中身を入れる） */
+#video-corner .horizontal-scroll-container { overflow-x: visible; padding: 0; }
+#video-corner .gallery-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  column-gap: 28px;
+  row-gap: 28px;
+  padding: 0;
+  width: 100%;
+}
+#video-corner .gallery-card {
+  background: #fff;
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;
+  display: flex; flex-direction: column; align-items: center;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#video-corner .gallery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+#video-corner .gallery-card .card-image {
+  width: 100%;
+  max-width: 224px;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: contain;
+  display: block; margin: 0 auto 12px;
+  padding: 8px; background:#fff; border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+#video-corner .card-info { padding: 0; text-align: center; }
+#video-corner .card-title { font-size: 1.05rem; margin: 0 0 6px; }
+#video-corner .card-description { font-size: .92rem; color:#555; line-height:1.7; }
+
+/* SP 振る舞い（HOME共通仕様） */
+@media (max-width: 768px){
+  #video-corner h2.section-title {
+    margin-left: auto; margin-right: auto; text-align: center;
+    padding: 14px 20px; border-radius: 14px;
+  }
+  #video-corner .section-description { margin: 0 auto 48px; }
+}
+
+/* ==== 動くオロチ奉納殿 (#video-corner) を #ai-corner と完全同一仕様に ==== */
+
+/* 1) 横スクロール解除＋余白リセット（#ai-corner と同じ） */
+#portfolio .horizontal-scroll-container,
+#ai-corner .horizontal-scroll-container,
+#video-corner .horizontal-scroll-container {
+  overflow: visible;
+  padding: 0;
+}
+
+/* 2) グリッド化とギャップ揃え（28px に統一） */
+#portfolio .gallery-grid,
+#ai-corner .gallery-grid,
+#video-corner .gallery-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  column-gap: 28px;
+  row-gap: 28px;
+  padding: 0;
+  width: 100%;
+}
+
+/* 3) カード外観（白カード＋薄影） */
+#portfolio .gallery-card,
+#ai-corner .gallery-card,
+#video-corner .gallery-card {
+  background: #fff;
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#portfolio .gallery-card:hover,
+#ai-corner .gallery-card:hover,
+#video-corner .gallery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* 4) 画像フレーム（224×224 の額縁・中央揃え） */
+#portfolio .gallery-card .card-image,
+#ai-corner .gallery-card .card-image,
+#video-corner .gallery-card .card-image,
+#digest-gallery-grid .gallery-card .card-image,
+#ai-digest-grid      .gallery-card .card-image {
+  width: 100%;
+  max-width: 224px;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  padding: 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* 5) テキスト＆like 行 */
+#portfolio .card-info,
+#ai-corner .card-info,
+#video-corner .card-info {
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+#portfolio .card-title,
+#ai-corner .card-title,
+#video-corner .card-title {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+#portfolio .card-description,
+#ai-corner .card-description,
+#video-corner .card-description {
+  font-size: .92rem;
+  color: #555;
+  line-height: 1.7;
+}
+#portfolio .gallery-icons,
+#ai-corner .gallery-icons,
+#video-corner .gallery-icons {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  text-align: right;
+}
+
+/* === 動くオロチ奉納殿（video.html） 見出しスタイルを他ページと統一 === */
+#page-video-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem);
+  line-height: 1.2;
+  letter-spacing: .02em;
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+  width: fit-content;
+  margin: 24px 0 24px;
+  text-align: left;
+}
+/* SPでは中央寄せ（他ページと同様） */
+@media (max-width: 768px){
+  #page-video-gallery h1.section-title{
+    display: block;
+    width: 100%;
+    margin: 0 0 28px 0;
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 14px;
+  }
+}
+
+/* ==== Global Header: size adjustments ==== */
+.header-container{
+  height: 90px;                 /* 60px → 90px（1.5倍） */
+}
+.global-nav.active{ top: 90px; }/* SP 展開時の基準も 90px に揃える */
+
+.site-title{
+  font-size: 1.95rem;           /* 1.5rem の 130% */
+}
+
+/* 右端から 20px 離す（既存20pxのpaddingに加えて更に20px間隔を確保） */
+.global-nav{ margin-right: 20px; }
+
+/* ==== Dropdown (作品) ==== */
+.global-nav li{ position: relative; }
+.global-nav li.has-sub > a::after{
+  content: "▾"; font-size: .8em; margin-left: .35em;
+}
+
+/* PC: ホバーで表示 */
+.global-nav .subnav{
+  display: none;
+  position: absolute;
+  top: 100%; left: 0;
+  min-width: 200px;
+  background: #372e51;          /* ヘッダー色 */
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  z-index: 1001;
+}
+.global-nav .subnav li{ margin: 0; }
+.global-nav .subnav a{
+  display: block;
+  padding: 10px 14px;
+  white-space: nowrap;
+  border-bottom: none;
+}
+.global-nav li.has-sub:hover > .subnav{ display: block; }
+
+/* SP: ハンバーガー展開中は常時表示（縦積み） */
+@media (max-width: 768px){
+  .global-nav .subnav{
+    position: static;
+    display: block;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0 8px 0;
+  }
+  .global-nav .subnav a{
+    padding: 8px 20px;
+  }
+}
+/* Header: hamburger の絶対配置基準にする */
+.header-container{
+  position: relative;
+}
+
+@media (max-width: 768px){
+  .hamburger-menu{
+    display:block;
+    background:none;
+    border:none;
+    cursor:pointer;
+    position:absolute;
+    right:20px;              /* 右に 20px の余白 */
+    top:50%;                 /* ヘッダー内で縦中央 */
+    transform:translateY(-50%);
+    z-index:1100;            /* メニューより上で確実にタップ可 */
+    width:44px; height:44px; /* タップ領域を十分に確保 */
+    padding:6px;
+    -webkit-tap-highlight-color:transparent;
+  }
+}
+
+/* ==== Dropdown (作品) – Hover / Current indication ==== */
+/* ホバー／フォーカス時：背景を薄く、左にアクセント棒、わずかに右へスライド */
+.global-nav .subnav a {
+  position: relative;
+  transition: background-color .18s ease, padding-left .18s ease, color .18s ease;
+}
+.global-nav .subnav a:hover,
+.global-nav .subnav a:focus-visible {
+  background-color: rgba(255,255,255,0.10);
+  padding-left: 26px;                 /* 右へスライド */
+}
+.global-nav .subnav a:hover::before,
+.global-nav .subnav a:focus-visible::before {
+  content: "";
+  position: absolute;
+  left: 10px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 9999px;
+  background: #fff;                   /* 白いピン */
+}
+
+/* 現在ページ（選択済み）表示：色を反転・左帯・✓アイコン */
+.global-nav .subnav a.is-current {
+  background: linear-gradient(90deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
+  font-weight: 700;
+  padding-left: 34px;
+}
+.global-nav .subnav a.is-current::before {
+  content: "✓";
+  position: absolute;
+  left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; color: #fff;
+}
+
+/* 親「作品」ラベル側も、子が選択中は下線でハイライト（PC時） */
+@media (min-width: 769px){
+  .global-nav li.has-sub.is-current > a {
+    border-bottom-color: #fff;    /* 既存の hover/active 下線スタイルを流用 */
+  }
+}
+/* ===== Mobile month pager (<=768px) ===== */
+@media (max-width: 768px){
+  .filter-bar{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    justify-items: center;
+  }
+
+  .month-filter{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 720px;
+    justify-content: center;
+  }
+
+  .month-pager{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .pager-window{
+    display: flex;
+    gap: 8px;
+    overflow: hidden;   /* 可視範囲を“窓”に */
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .pager-window .filter-btn{
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .pager-btn{
+    appearance: none;
+    border: 1px solid rgba(0,0,0,.2);
+    background: #fff;
+    color: #372e51;
+    width: 36px; height: 36px;
+    line-height: 34px;
+    border-radius: 9999px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .pager-btn:disabled{
+    opacity: .35;
+    cursor: default;
+  }
+
+  .pager-dots{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+  .pager-dots .dot{
+    width: 6px; height: 6px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,.18);
+  }
+  .pager-dots .dot.is-active{
+    background: #7d63ce;
+  }
+}

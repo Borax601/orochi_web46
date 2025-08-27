@@ -1,0 +1,21 @@
+# mac
+.DS_Store
+
+# build/cache
+dist/
+build/
+.cache/
+
+# tools
+node_modules/
+.vercel/
+.firebase/
+firebase-debug.log
+
+# secrets
+.env
+.env.*
+serviceAccount*.json
+
+# logs
+server.log

@@ -1,0 +1,157 @@
+/* 続き：#portfolio .gallery-grid の設定から */
+#portfolio .gallery-grid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+  padding: 0;
+  width: 100%;
+}
+
+/* #portfolio専用カードスタイル（統合版） */
+#portfolio .gallery-card{
+  background: #fff;
+  color: #333;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+#portfolio .gallery-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+#portfolio .gallery-card .card-image{
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+#portfolio .card-info{
+  padding: 0;
+  align-items: flex-start;
+  text-align: left;
+}
+
+#portfolio .card-title{
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+
+#portfolio .card-description{
+  font-size: .92rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+#portfolio .gallery-icons{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  text-align: right;
+}
+
+/* ===== Gallery page見出し（統合版・最終） ===== */
+#page-gallery h1.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem);
+  line-height: 1.2;
+  letter-spacing: .02em;
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+  width: fit-content;
+  margin: 24px 0 24px;
+  text-align: left;
+}
+
+@media (max-width: 768px){
+  #page-gallery h1.section-title{
+    display: block;
+    width: 100%;
+    margin: 0 0 28px 0;
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 14px;
+  }
+}
+
+/* Gallery page説明文 */
+#page-gallery .section-description{
+  max-width: 72ch;
+  margin: 0 0 28px 0;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}
+
+#page-gallery nav.filter-bar{
+  margin: 0 0 36px 0;
+}
+
+/* ===== AIコーナー ===== */
+#ai-corner {
+  margin-top: 72px;
+}
+
+/* 共通見出しスタイル：#portfolio, #ai-corner */
+#portfolio h2.section-title,
+#ai-corner h2.section-title{
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.0rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: #7d63ce;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.10);
+  width: fit-content;
+  margin: 24px 0 24px;
+  text-align: left;
+}
+
+@media (max-width: 768px){
+  #portfolio h2.section-title,
+  #ai-corner h2.section-title{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+#ai-corner .section-description {
+  max-width: 72ch;
+  margin: 0 0 48px 0;
+  text-align: left;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* ===== HOME: 奉納作品 説明文 ===== */
+#portfolio .section-description{
+  max-width: 72ch;
+  margin: 0 0 28px 0;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #555;
+  text-align: left;
+}

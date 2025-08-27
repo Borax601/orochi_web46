@@ -1,0 +1,596 @@
+/* header-white.css  ─ 固定ヘッダーを真っ白にするだけ */
+.global-header{ 
+  background:#ffffff !important; 
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  transition: opacity .4s ease-out;
+}
+
+/* SP ハンバーガー展開メニューも白に */
+@media (max-width:768px){
+  .global-nav.active{ 
+    background:#ffffff !important; 
+    top: 90px !important; 
+  }
+}
+
+/* ---- 2025-08-07 header text override ---- */
+
+/* ヒラギノ丸ゴ（macOS 標準）＋フォールバック */
+:root{
+  --font-marugo: 'Hiragino Maru Gothic Pro',
+                 'ヒラギノ丸ゴ Pro',
+                 'Hiragino Maru Gothic',
+                 'ヒラギノ丸ゴ',
+                 'M PLUS Rounded 1c',
+                 'Noto Sans JP',
+                 sans-serif;
+  --c-header-text:#372e51;   /* 既存キーカラー */
+  --header-pad: 20px;     /* 左右ガターを20pxに統一 */
+  --ridge-up: 20px;     /* header-img.svg を上に寄せる量 */
+  --subject-w: 0px;       /* JSで上書きする：subjectの実幅 */
+  --ridge-h-pc: 46px;
+  --ridge-h-sp: 30px;
+  --gutter: 20px;  /* 左右余白 */
+  --nav-down: 25px;     /* 下方向の移動量（必要なら数値だけ調整） */
+}
+
+/* タイトル & ナビリンク */
+.site-title,
+.global-nav a{
+  color:var(--c-header-text)!important;
+  font-family:var(--font-marugo)!important;
+}
+
+/* ハンバーガー３本線も紫に */
+.hamburger-menu span{
+  background-color:var(--c-header-text)!important;
+}
+
+/* ホバー & アクティブ下線も紫 */
+.global-nav a:hover,
+.global-nav a.active{
+  border-bottom-color:var(--c-header-text)!important;
+}
+
+/* === 2025-08-07  Fixed-header offset for All-Works pages === */
+/* ① 見出しブロックをヘッダー高さ＋余白ぶん下へ押し下げる               */
+/* ② ページ ID を使い、他ページには影響を与えない                          */
+body#page-gallery   .page-header,
+body#page-video-gallery .page-header,
+body#page-ai-gallery   .page-header{
+  margin-top: 150px !important;   /* 130px(ヘッダー) ＋ 20px 余白 */
+}
+
+/* === 2025-08-07  Fixed-header offset (110px) === */
+/* 固定ヘッダー 90px ＋ 余白 20px */
+body#page-gallery       #main-content,
+body#page-video-gallery #main-content,
+body#page-ai-gallery    #main-content{
+  padding-top: 150px !important;
+}
+
+/* === 2025-08-07  Dropdown color final override ================= */
+.global-nav .subnav{
+  background:#ffffff !important;          /* ボックスを白に */
+  border:1px solid rgba(0,0,0,.08) !important;
+}
+
+/* リンク文字を紫 (#372e51) に統一 */
+.global-nav .subnav a{
+  color:#372e51 !important;
+  font-family:var(--font-marugo,'Hiragino Maru Gothic','Noto Sans JP',sans-serif) !important;
+}
+
+/* ホバー・選択行の強調は薄グレー背景で */
+.global-nav .subnav a:hover,
+.global-nav .subnav a.is-current,
+.global-nav .subnav a.active{
+  background:rgba(0,0,0,.06) !important;
+  color:#372e51 !important;
+}
+
+/* === 2025-08-07  Header padding +20px top & bottom ================ */
+/* 1) ヘッダー本体に上下 20px のパディングを与える */
+/* 2) 内部コンテナの高さを再計算（90px 本体 + 40px 余白）*/
+.global-header{ 
+  position: relative; 
+}
+
+/* ヘッダー1行目（ロゴ+ナビ） */
+.global-header .header-container{
+  display:flex; 
+  align-items:center; 
+  justify-content:space-between;
+  padding-left: var(--header-pad);
+  padding-right: var(--header-pad);
+}
+
+/* ロゴのサイズ（前回指示の維持：2回り拡大） */
+.global-header .header-subject{ 
+  height:72px; 
+  width:auto; 
+  display:block; 
+}
+@media (max-width:768px){ 
+  .global-header .header-subject{ 
+    height:48px; 
+  } 
+}
+
+/* 2行目：ridge 行を“コンテンツ幅いっぱい”に。左右20pxのガターを付与 */
+.global-header .header-ridge-row{
+  position: relative;
+  z-index: 20;                /* ナビより下、雲より上 */
+  margin-top: 8px;
+  padding-left: var(--header-pad);
+  padding-right: var(--header-pad);
+  box-sizing: border-box;
+
+  /* 画像を上に20px寄せる（重なってOKとの指示） */
+  transform: translateY(calc(-1 * var(--ridge-up)));
+}
+
+/* 画像本体：親幅100%で比率維持 */
+.global-header .header-ridge-single{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* レイヤリング（念のため維持） */
+.global-header [class*="kumo"]{ position: relative; z-index: 10; }
+.global-header .global-nav{ position: relative; z-index: 40; }
+
+@media (max-width: 768px){
+  :root{ --ridge-up: 14px; }
+}
+
+/* ===== Right nav / layering ===== */
+.global-header .global-nav{ 
+  position: relative; 
+  z-index: 40; 
+  transform: translateY(var(--nav-down));
+  will-change: transform;       /* スクロール時のチラつき抑制（軽量化） */
+}
+.global-header [class*="kumo"]{ 
+  position: relative; 
+  z-index: 10; 
+}
+.global-header .global-nav .menu{ 
+  display:flex; 
+  align-items:center; 
+  gap:24px; 
+}
+.global-header .global-nav a{ 
+  color: var(--c-header-text,#372e51); 
+  text-decoration:none; 
+}
+.global-header .global-nav a:hover{ 
+  opacity:.8; 
+}
+
+/* ===== Dropdown ===== */
+.global-header .menu > li{ 
+  position: relative; 
+}
+
+.global-header .menu > li .submenu{
+  display: none;
+  position: absolute;
+  top: 100%;          /* ← 以前の calc(100% + 8px) を廃止：すき間ゼロ */
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #E5E5EA;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  padding: 8px 0;     /* 見た目の余白は内側で表現（ギャップを作らない） */
+  z-index: 60;        /* ridge(20)・nav(40) より前 */
+}
+
+.global-header .menu > li .submenu li{ list-style: none; }
+.global-header .menu > li .submenu a{ display:block; padding:10px 14px; white-space:nowrap; }
+
+/* 表示トリガー（ホバー/フォーカス） */
+.global-header .menu > li.has-submenu:hover > .submenu,
+.global-header .menu > li.has-submenu:focus-within > .submenu{
+  display: block;
+}
+
+/* 親<li>の直下に不可視の10pxゾーンを作り、hover状態を維持 */
+.global-header .menu > li.has-submenu::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 10px;       /* 橋渡し高さ */
+  background: transparent;
+}
+
+@media (max-width:768px){
+  .global-header .global-nav.active .submenu{
+    position: static;
+    display: block;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 0 12px;
+  }
+}
+
+/* === navリンク（テキスト＋SVG）の共通ホバー下線 === */
+.global-header .global-nav .menu > li > a{
+  position: relative;
+  display: inline-flex;        /* SVGでも幅が出るように */
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;       /* 既存の下線は使わず統一 */
+  padding-bottom: 2px;         /* 下線分の余白 */
+  line-height: 1;
+}
+
+/* 下線本体（SVGにも効くよう擬似要素で描画） */
+.global-header .global-nav .menu > li > a::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: currentColor;    /* 文字色と同色 */
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: left;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+/* ホバー/キーボードフォーカスで表示 */
+.global-header .global-nav .menu > li > a:hover::after,
+.global-header .global-nav .menu > li > a:focus-visible::after{
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* 念のため：クリック阻害が無いよう明示 */
+.global-header .global-nav a,
+.global-header .global-nav .icon-link,
+.global-header .global-nav .icon-link .cart-icon{ pointer-events: auto; }
+
+/* === Splash Screen =================================================== */
+#splash{
+  position:fixed; 
+  inset:0; 
+  z-index:3000;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  background:#ffffff;
+  opacity:1;
+  transform:scale(1);                     /* 初期スケール */
+  transition:
+    opacity .8s ease-out,
+    transform .8s cubic-bezier(.4,.0,.2,1); /* 同時に拡大 */
+}
+
+#splash.zoom-fade{           /* ← クラス名変更 */
+  opacity:0;
+  transform:scale(2.4);        /* 2.4倍にズーム (鳥居幅とほぼ一致) */
+  pointer-events:none;
+}
+
+#splash img{ 
+  width:280px; 
+  height:auto; 
+}
+
+/* === 2025-08-07  Hero spacer = 40px ============================== */
+.hero-offset{
+  height:40px;
+}
+
+/* === 2025-08-07  Hero intro typography =============================== */
+#hero-intro p{
+  color:#372e51 !important;
+  font-family:var(--font-marugo,'Hiragino Maru Gothic Pro','Noto Sans JP',sans-serif) !important;
+}
+
+/* === 同一ガターを header に集約（左右20px） === */
+:root{
+  --gutter: 20px;   /* 左右余白 */
+  --ridge-up: 20px; /* ridge の上寄せ量 */
+}
+
+/* 親 header が左右ガターを持つ。子行にはパディングを持たせない */
+header.global-header{
+  box-sizing: border-box !important;
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+}
+
+/* 両行は header の内側で幅100%・パディング0 */
+header.global-header > .header-container,
+header.global-header > .header-ridge-row{
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 2行目：画像を20px上に寄せる */
+header.global-header > .header-ridge-row{
+  position: relative !important;
+  z-index: 20 !important;
+  margin-top: 8px !important;
+  transform: translateY(calc(-1 * var(--ridge-up))) !important;
+
+  /* 念のため、旧フルブリード指定を完全無効化 */
+  left: auto !important; right: auto !important;
+}
+
+/* 画像は親幅に追従、比率維持 */
+header.global-header > .header-ridge-row .header-ridge-single{
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* ===== Icons size ===== */
+.global-header .icon-link .cart-icon{ 
+  height: 18px; 
+  width: 18px; 
+  display:block; 
+}
+@media (max-width:768px){ 
+  .global-header .icon-link .cart-icon{ 
+    height:16px; 
+    width:16px; 
+  } 
+}
+
+/* Hero の一時表示テキストをナビと同じフォントに */
+#hero-intro,
+#hero-intro p,
+#hero-intro .intro-step p{
+  font-family: var(--font-marugo) !important;
+  font-size: 100%;
+}
+
+/* ===================== Mobile Nav (center box under header) ===================== */
+@media (max-width: 768px){
+
+  /* 1) ハンバーガーアイコンを60%に */
+  .global-header .hamburger-menu{
+    transform: scale(0.6);
+    transform-origin: center right; /* 右上の見た目を極力維持 */
+  }
+
+  /* 2) 既存の右側メニュー表示は隠す（スマホ時は使わない） */
+  .global-header .global-nav{
+    display: none !important;
+  }
+
+  /* 3) ヘッダーの直後に差し込む“中央ボックス” */
+  .mobile-menu-panel{
+    display: none;           /* デフォルト非表示：JSでopen時にblock */
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+  .mobile-menu-panel .menu-box{
+    max-width: 360px;        /* ボックス幅 */
+    margin: 8px auto 16px;   /* 画面中央 */
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.08);
+    font-size: 0.875rem;     /* 文字サイズは控えめ（約14px想定） */
+    line-height: 1.6;
+  }
+
+  /* メニュー項目 */
+  .mobile-menu-panel .menu-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .mobile-menu-panel .menu-list a{
+    text-decoration: none;
+    color: #2b2542;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .mobile-menu-panel .menu-list a::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height: 2px; background: currentColor;
+    opacity:0; transform: scaleX(.2);
+    transform-origin: left;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .mobile-menu-panel .menu-list a:hover::after,
+  .mobile-menu-panel .menu-list a:focus-visible::after{
+    opacity:1; transform: scaleX(1);
+  }
+
+  /* 開いたときに表示 */
+  .is-menu-open .mobile-menu-panel{
+    display: block;
+  }
+}
+
+/* ==== Mobile menu: always fixed right under fixed header ==== */
+
+/* ヘッダーは z-index:1000 なので、パネルは 950 で“下に潜らず上にも出す” */
+.mobile-menu-panel{
+  position: fixed;
+  left: 0;
+  right: 0;
+  /* JS が --header-bottom にヘッダー下端のpx値を入れる */
+  top: calc(var(--header-bottom, 88px) + 8px);
+  z-index: 950;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+/* クリック可能領域（中の白い箱） */
+.mobile-menu-panel .menu-box{
+  max-width: 360px;
+  margin: 0 auto 16px;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.08);
+}
+
+/* メニュー開いている間は背景スクロールを止める */
+html.is-menu-open{
+  overflow: hidden;
+}
+
+/* === index: CTA(#portfolio) → #ai-corner のギャップをさらに半分に === */
+/* ページ特定の隣接セレクタでピンポイントに上書き（他には影響しない） */
+#portfolio + #ai-corner{
+  margin-top: 18px !important;  /* 36px → 18px にさらに半減 */
+}
+
+/* モバイルで更に詰めたい場合はここで個別調整（任意） */
+@media (max-width:768px){
+  #portfolio + #ai-corner{ margin-top: 14px !important; }
+}
+
+/* index: #ai-corner の上パディングを“今の半分”にする。
+   いま styles.css では padding: 80px 20px; なので → 40px に上書き */
+#ai-corner{
+  padding: 40px 20px !important;  /* 80 → 40 */
+}
+
+/* モバイルはさらに詰める場合だけ使用（任意） */
+@media (max-width: 768px){
+  #ai-corner{ padding: 28px 20px !important; }
+}
+
+/* === index: 「全ての作品を見る」→各セクションの上余白の統一 === */
+/* 既に設定済みの #ai-corner と同じ数値を動画セクションにも適用する */
+
+/* #portfolio の直後が #ai-corner のケース：72px → 36px に半減（既存） */
+#portfolio + #ai-corner,
+#portfolio + #video-corner{
+  margin-top: 36px !important;
+}
+/* #ai-corner の上パディング：80 → 40 に半減（既存） */
+#ai-corner,
+#video-corner{
+  padding-top: 40px !important;
+}
+
+/* モバイルの微調整を #ai-corner に合わせる場合（任意・同値に） */
+@media (max-width: 768px){
+  #video-corner{ padding-top: 28px !important; }
+}
+
+/* === gallery: #main-content の上パディングを 0 に（ページ限定） === */
+body#page-gallery #main-content{
+  padding-top: 0 !important;   /* 150px → 0 に上書き */
+}
+
+/* === page scoped: remove top padding on #main-content ================== */
+/* toki-sude-ni-orochi.html */
+body#page-toki-sude-ni-orochi main#main-content{
+  padding-top: 0 !important;     /* 150 → 0 */
+}
+
+/* video.html */
+body#page-video main#main-content{
+  padding-top: 0 !important;     /* 150 → 0 */
+}
+
+/* ▼もし上下左右すべて 0 にしたい場合は下記を代わりに使用（どちらか片方） */
+/*
+body#page-toki-sude-ni-orochi main#main-content,
+body#page-video              main#main-content{
+  padding: 0 !important;
+}
+*/
+
+/* === page-scoped: force #main-content top padding to 0 ================= */
+/* 詳細度を上げるため、IDを二重指定＋要素ID重複を使う。 */
+body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
+  padding-top: 0 !important;
+}
+body#page-video body#page-video main#main-content#main-content{
+  padding-top: 0 !important;
+}
+
+/* === unify header↔main gap with gallery (page-scoped, safe) ============ */
+/* gallery と同じく main#main-content の上側余白を 0 に固定する。
+   詳細度で勝つために ID×2 + 要素ID で強制、!important を併用。 */
+
+/* 時すでにオロチ（toki-sude-ni-orochi.html） */
+body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
+  padding-top: 0 !important;
+  margin-top: 0 !important;   /* 念のため */
+}
+
+/* 動くオロチ奉納殿（video.html） */
+body#page-video body#page-video main#main-content#main-content{
+  padding-top: 0 !important;
+  margin-top: 0 !important;   /* 念のため */
+}
+
+/* === unify with gallery: header→main gap = 0 & no see-through =========== */
+/* 1) ヘッダー直下の余白を 0（padding/margin どちらでも潰れるように両方）*/
+/* 2) 背面透け対策：gallery と同様に main 背景を白で塗りつぶし、opacityを固定 */
+
+/* toki-sude-ni-orochi.html */
+body#page-toki-sude-ni-orochi body#page-toki-sude-ni-orochi main#main-content#main-content{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  background-color: #fff !important;  /* 背面透け防止（gallery と同じ見え方） */
+  opacity: 1 !important;              /* JSや他CSSで薄くされないよう固定 */
+}
+
+/* video.html */
+body#page-video body#page-video main#main-content#main-content{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  background-color: #fff !important;  /* 背面透け防止（gallery と同じ見え方） */
+  opacity: 1 !important;              /* JSや他CSSで薄くされないよう固定 */
+}
+
+/* ページ先頭の“最初のセクション”が余計に空いている場合の保険（ページ限定） */
+body#page-toki-sude-ni-orochi #main-content > .content-section:first-child,
+body#page-video              #main-content > .content-section:first-child{
+  margin-top: 0 !important;
+}
+
+/* ==== Mobile menu: failsafe & icon sizing (global) ==== */
+
+/* PC/モバイル問わず、モバイルパネルは初期状態で非表示にする（安全網） */
+.mobile-menu-panel{ display:none; }
+
+/* 開いている間だけ表示（HTML要素に is-menu-open を付与） */
+html.is-menu-open .mobile-menu-panel{ display:block; }
+
+/* ヘッダー外（モバイルパネル内）にもカートSVGの寸法を適用 */
+.mobile-menu-panel .icon-link .cart-icon{
+  width:18px; height:18px; display:inline-block; flex-shrink:0;
+}
+
+/* パネル内リンクはアイコンとテキストの横並びにして見やすく */
+.mobile-menu-panel .menu-list a{
+  display:inline-flex; align-items:center; gap:8px;
+  color:#2b2542; text-decoration:none;
+}
+
+/* スマホでは少しだけ小さく */
+@media (max-width:768px){
+  .mobile-menu-panel .icon-link .cart-icon{ width:16px; height:16px; }
+}
+
+/* toki-sude-ni-orochi（= body#page-ai-gallery）も gallery と同じ余白に */
+body#page-ai-gallery #main-content { padding-top: 0 !important; }
+body#page-ai-gallery #main-content > .content-section:first-child { margin-top: 0 !important; }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>全作品一覧 - 開運オロチ神社</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/orochi-32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="assets/orochi-180.png">
+  <link rel="icon" type="image/svg+xml" href="assets/orochi.svg">
+  <link rel="apple-touch-icon" href="assets/orochi-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="page-header">
+    <div class="section-container">
+      <nav>
+        <ul class="menu">
+          <li><a href="./index.html">本殿</a></li>
+          <li class="has-submenu">
+            <a href="./gallery.html">作品</a>
+            <ul class="submenu">
+              <li><a href="./gallery.html">奉納作品</a></li>
+              <li><a href="./toki-sude-ni-orochi.html">時すでにオロチ</a></li>
+              <li><a href="./video.html">動くオロチ奉納殿</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="icon-link x" aria-label="X"><span>X</span></a></li>
+          <li>
+            <a href="#" class="icon-link shop" aria-label="Shop">
+              <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6h14l-2 9H8L6 6Zm0 0H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="9" cy="20" r="1.6" fill="currentColor"></circle>
+                <circle cx="17" cy="20" r="1.6" fill="currentColor"></circle>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="archive-gallery" class="main-section">
+      <div class="section-container">
+        <h1 class="section-title">全作品一覧</h1>
+        <p>これまでに制作した全ての開運オロチ作品です。</p>
+        
+        <nav class="filter-bar">
+          <p>（ここに後で月別フィルターボタンを設置します）</p>
+        </nav>
+        
+        <div class="gallery-grid full-page-grid"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="copyright">© 2025 Kaiun Orochi Shrine | Created by Borax601</div>
+  </footer>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+  
+  <!-- いいねシステム -->
+  <script src="./likes.js"></script>
+  
+  <script src="main.js"></script>
+</body>
+</html>

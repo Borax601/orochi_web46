@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開運オロチ神社</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header-white.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap">
+    <link rel="icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/orochi-32.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="assets/orochi-180.png">
+    <link rel="icon" type="image/svg+xml" href="assets/orochi.svg">
+    <link rel="apple-touch-icon" href="assets/orochi-180.png">
+    <style id="splash-v2-fadeonly">
+      /* 子要素側にかかっている過去のアニメや変形を完全無効化 */
+      #splash * {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+      }
+
+      /* フェードのみ（3s待機 → 1.2sで透明化 → 非表示固定） */
+      @keyframes splashFade { to { opacity: 0; } }
+      @keyframes hideAfter  { to { visibility: hidden; } } /* 最後は見えない状態を保持 */
+
+      #splash{
+        /* 既存の配置前提。覆いかぶさる想定で中央寄せ（ズームはさせない） */
+        position: fixed; inset: 0; display: grid; place-items: center;
+        transform: none !important;                 /* ズーム・回転の打ち消し */
+        pointer-events: none;                       /* 下のUIをブロックしない */
+        /* ここで旧アニメを**強制的に上書き**してフェードのみ実行 */
+        animation: splashFade 1.2s ease-out 3s forwards,
+                   hideAfter  0s   linear   4.2s forwards !important;
+        /* メモ：サイズ固定のため img の width/height は一切指定しない */
+      }
+
+      /* アニメが苦手なユーザ設定には自動で無効化（任意だが推奨） */
+      @media (prefers-reduced-motion: reduce){
+        #splash{ animation: none !important; opacity: 0; visibility: hidden; }
+      }
+    </style>
+</head>
+<body>
+    <!-- ===== Splash Screen ================================================= -->
+    <div id="splash" aria-hidden="true">
+      <img src="assets/orochi_start.svg" alt="開運オロチ神社 ロゴ">
+    </div>
+    <!-- ===================================================================== -->
+    <header class="global-header">
+        <div class="header-container">
+            <img src="./assets/header-subject.svg"
+                 alt="開運オロチ神社"
+                 class="header-subject"
+                 decoding="async"
+                 loading="eager">
+            <button class="hamburger-menu" aria-label="メニューを開く">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="global-nav" aria-label="Main">
+                <ul class="menu">
+                  <li><a href="./index.html">本殿</a></li>
+                  <li class="has-submenu">
+                    <a href="./gallery.html">作品</a>
+                    <ul class="submenu">
+                      <li><a href="./gallery.html">奉納作品</a></li>
+                      <li><a href="./toki-sude-ni-orochi.html">時すでにオロチ</a></li>
+                      <li><a href="./video.html">動くオロチ奉納殿</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="https://x.com/Borax601"
+                       class="icon-link x"
+                       aria-label="X"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <span>X</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://suzuri.jp/Borax"
+                       class="icon-link shop"
+                       aria-label="Shop"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       title="開運オロチ屋（SUZURI）">
+                      <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6h14l-2 9H8L6 6Zm0 0H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <circle cx="9" cy="20" r="1.6" fill="currentColor"></circle>
+                        <circle cx="17" cy="20" r="1.6" fill="currentColor"></circle>
+                      </svg>
+                    </a>
+                  </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 2行目：単一SVGの山並み -->
+        <div class="header-ridge-row" aria-hidden="true">
+          <img src="./assets/header-img.svg" alt="" class="header-ridge-single">
+        </div>
+    </header>
+    <header id="key-visual" class="hero-section">
+        <div class="hero-image-container">
+            <!-- Orochi frame sequence -->
+            <img src="assets/orochi_a.svg" class="hero-orochi" id="orochi-pose-a" />
+            <img src="assets/orochi_b.svg" class="hero-orochi" id="orochi-pose-b" />
+            <img src="assets/orochi_c.svg" class="hero-orochi" id="orochi-pose-c" />
+            <img src="assets/orochi_d.svg" class="hero-orochi" id="orochi-pose-d" />
+            <!-- “浮かび上がって鳥居へ”用の１枚 -->
+            <img src="assets/orochi_e.svg" class="hero-orochi" id="orochi-pose-e" />
+            <!-- Torii (最背面) -->
+            <img src="assets/torii.svg" class="hero-torii" alt="鳥居" />
+        </div>
+    </header>
+    <section id="hero-intro" class="intro-section">
+        <div class="intro-step" data-step="1">
+            <p>ようこそ、開運オロチ神社へ。</p>
+        </div>
+
+        <div class="intro-step" data-step="2">
+            <p>ここは、開運がめぐる場所。</p>
+            <p>「見る」「好き」「また来る」――</p>
+        </div>
+
+        <div class="intro-step" data-step="3">
+            <p>その小さな積み重ねが、</p>
+            <p>世界を明るくし、あなたの運気を押し上げる。</p>
+        </div>
+
+        <div class="intro-step" data-step="4">
+            <p>ひとつひとつの作品の願いが、心に追い風を運び</p>
+            <p>新しい一歩を踏み出す力になるでしょう。</p>
+        </div>
+    </section>
+    <main id="main-content">
+        <section class="content-section" id="portfolio">
+            <h2 class="section-title">奉納作品</h2>
+            <p class="section-description">
+                開運とご縁を願い、一枚一枚に想いと遊び心を込めて描き、奉納してまいりました。<br>
+                ご覧くださる皆さまにも、ささやかなご利益が訪れますように──
+            </p>
+            <div class="horizontal-scroll-container">
+                <div class="gallery-grid" id="digest-gallery-grid"></div>
+            </div>
+            <div class="view-all-container"><a href="gallery.html" class="view-all-button">全ての作品を見る</a></div>
+        </section>
+        <section class="content-section" id="ai-corner">
+            <h2 class="section-title">時すでにオロチ</h2>
+            <p class="section-description">
+                AIによって生成されたオロチの「やらかし」集。<br>
+                「時すでに遅し」な状況をモチーフに、オロチのキャラをいじって楽しむ
+                ミームカルチャーを作品として奉納しています。
+            </p>
+            <div class="horizontal-scroll-container">
+                <div class="gallery-grid" id="ai-digest-grid"></div>
+            </div>
+            <div class="view-all-container"><a href="toki-sude-ni-orochi.html" class="view-all-button">全ての作品を見る</a></div>
+        </section>
+        <!-- 動くオロチ奉納殿（動画ダイジェスト：このターンはHTMLのみ） -->
+        <section class="content-section" id="video-corner">
+          <h2 class="section-title">動くオロチ奉納殿</h2>
+          <p class="section-description">
+            開運オロチが舞い降りる、映像で楽しむ奉納所。<br>
+            動く御神影に、笑みと福が宿ります。
+          </p>
+          <div class="horizontal-scroll-container">
+            <div class="gallery-grid" id="video-digest-grid"></div>
+          </div>
+          <div class="view-all-container">
+            <a href="video.html" class="view-all-button">全ての作品を見る</a>
+          </div>
+        </section>
+    </main>
+    <footer class="footer">
+      <div class="copyright">© 2025 Kaiun Orochi Shrine | Created by Borax601</div>
+    </footer>
+    <script id="splash-bridge-init">
+(function(){
+  var root = document.documentElement;
+  var splash = document.getElementById('splash');
+
+  function markAfterSplash(){
+    root.classList.add('is-after-splash');
+  }
+
+  if (splash){
+    splash.addEventListener('animationend', function(e){
+      if (e.animationName === 'splashFade') markAfterSplash();
+    });
+    setTimeout(markAfterSplash, 5600); // 0.6s + 4s + 1.2s ≒ 5.8s より少し短めの保険
+  }else{
+    markAfterSplash();
+  }
+})();
+</script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    
+    <!-- いいねシステム -->
+    <script src="./likes.js"></script>
+    
+    <script src="main.js"></script>
+</body>
+</html>
