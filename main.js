@@ -497,40 +497,231 @@ function renderGallery(works, containerSelector) {
   container.innerHTML = galleryHtml;
 }
 
-function setupLikeButtons() {
-  const likeButtons = document.querySelectorAll('.like-btn');
-  likeButtons.forEach(button => {
-    const card = button.closest('.gallery-card');
-    if (!card) return;
-    const imageElement = card.querySelector('.card-image');
-    if (!imageElement) return;
+// Firebase設定
+const firebaseConfig = {
+  apiKey: "AIzaSyDgGLO59I3GxWxhvavAKTY1vk5kLWsSH-k",
+  authDomain: "orochi-shrine-likes.firebaseapp.com",
+  databaseURL: "https://orochi-shrine-likes-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "orochi-shrine-likes",
+  storageBucket: "orochi-shrine-likes.firebasestorage.app",
+  messagingSenderId: "459406898781",
+  appId: "1:459406898781:web:714a214abc0782a577ffb4"
+};
 
-    const likeId = 'like-' + imageElement.src;
+// Firebase初期化
+let firebaseApp = null;
+let database = null;
+let currentUserId = null;
 
-    if (button.dataset.listenerAttached) return;
-
-    const saved = localStorage.getItem(likeId);
-    if (saved) {
-      button.innerText = '♥ ' + saved;
-      button.classList.add('is-liked');
+function initFirebase() {
+  if (typeof firebase !== 'undefined' && !firebaseApp) {
+    firebaseApp = firebase.initializeApp(firebaseConfig);
+    database = firebase.database();
+    
+    // ユーザーID生成（デバイス固有）
+    currentUserId = localStorage.getItem('orochiUserId');
+    if (!currentUserId) {
+      currentUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('orochiUserId', currentUserId);
     }
+    console.log('🔥 Firebase初期化完了:', currentUserId.slice(-8));
+  }
+}
 
-    button.addEventListener('click', () => {
-      if (button.classList.contains('is-liked')) return;
-      button.classList.add('is-liked');
+// 作品IDを画像URLから抽出
+function extractWorkId(imageUrl) {
+  const match = imageUrl.match(/img_(\d{8})\./);
+  return match ? match[1] : null;
+}
 
-      let current = parseInt(button.innerText.replace(/[♡♥]\s?/, '')) || 0;
-      const next = current + 1;
-      button.innerText = '♥ ' + next;
-      localStorage.setItem(likeId, next);
+async function setupLikeButtons() {
+  // Firebase初期化
+  initFirebase();
+  
+  if (!database) {
+    console.warn('Firebase未初期化のため、いいね機能を無効化');
+    return;
+  }
 
-      button.classList.add('is-popping');
-      setTimeout(() => button.classList.remove('is-popping'), 300);
+  const likeButtons = document.querySelectorAll('.like-btn');
+  console.log(`👆 ${likeButtons.length}個のいいねボタンを発見`);
+
+  for (const button of likeButtons) {
+    const card = button.closest('.gallery-card');
+    if (!card) continue;
+    
+    const imageElement = card.querySelector('.card-image');
+    if (!imageElement) continue;
+
+    const workId = extractWorkId(imageElement.src);
+    if (!workId) continue;
+
+    // 既にバインド済みならスキップ
+    if (button.dataset.workId === workId) continue;
+    button.dataset.workId = workId;
+
+    // 初期状態をFirebaseから読み込み
+    await loadInitialLikeState(button, workId);
+
+    // クリックイベントリスナー
+    button.addEventListener('click', () => handleLikeClick(button, workId));
+    
+    console.log(`✅ ${workId}: バインド完了`);
+  }
+}
+
+// 初期状態をFirebaseから読み込み
+async function loadInitialLikeState(button, workId) {
+  try {
+    const likesRef = database.ref(`likes/${workId}`);
+    const snapshot = await likesRef.once('value');
+    const data = snapshot.val() || { count: 0, users: {} };
+    
+    const globalCount = data.count || 0;
+    const isUserLiked = data.users && data.users[currentUserId] === true;
+
+    updateButtonUI(button, isUserLiked, globalCount);
+    console.log(`📊 ${workId}: 初期状態 - グローバル:${globalCount}, 個人:${isUserLiked}`);
+
+    // リアルタイム更新をリスニング
+    likesRef.on('value', (snapshot) => {
+      const updatedData = snapshot.val() || { count: 0, users: {} };
+      const updatedCount = updatedData.count || 0;
+      const isStillLiked = updatedData.users && updatedData.users[currentUserId] === true;
+      updateButtonUI(button, isStillLiked, updatedCount);
     });
 
-    button.dataset.listenerAttached = 'true';
-  });
+  } catch (error) {
+    console.error(`❌ ${workId}: 初期状態読み込みエラー:`, error);
+    button.innerText = '♡ 0';
+  }
 }
+
+// ボタンクリック処理
+async function handleLikeClick(button, workId) {
+  if (button.disabled) return;
+  button.disabled = true;
+
+  try {
+    const likesRef = database.ref(`likes/${workId}`);
+    const snapshot = await likesRef.once('value');
+    const data = snapshot.val() || { count: 0, users: {} };
+    
+    const currentCount = data.count || 0;
+    const isCurrentlyLiked = data.users && data.users[currentUserId] === true;
+    
+    let newCount;
+    let newUserState;
+
+    if (isCurrentlyLiked) {
+      // いいね解除
+      newCount = Math.max(0, currentCount - 1);
+      newUserState = null; // nullで削除
+      console.log(`💔 ${workId}: 解除 ${currentCount} → ${newCount}`);
+    } else {
+      // いいね追加
+      newCount = currentCount + 1;
+      newUserState = true;
+      console.log(`❤️ ${workId}: 追加 ${currentCount} → ${newCount}`);
+    }
+
+    // Firebaseに更新を送信
+    const updates = {};
+    updates[`likes/${workId}/count`] = newCount;
+    updates[`likes/${workId}/users/${currentUserId}`] = newUserState;
+
+    await database.ref().update(updates);
+    console.log(`✅ ${workId}: Firebase更新完了`);
+
+    // アニメーション
+    button.classList.add('is-popping');
+    setTimeout(() => button.classList.remove('is-popping'), 300);
+
+  } catch (error) {
+    console.error(`❌ ${workId}: クリック処理エラー:`, error);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+// ボタンUI更新
+function updateButtonUI(button, isLiked, count) {
+  const icon = isLiked ? '♥' : '♡';
+  button.textContent = `${icon} ${count}`;
+  
+  if (isLiked) {
+    button.classList.add('is-liked');
+    button.style.color = '#e91e63';
+    button.style.fontWeight = 'bold';
+  } else {
+    button.classList.remove('is-liked');
+    button.style.color = '#666';
+    button.style.fontWeight = 'normal';
+  }
+}
+
+// ========== リセット・デバッグ機能 ==========
+
+// 全てのいいねを0にリセット（ローカル + Firebase）
+window.resetAllLikes = async function() {
+  console.log('🔄 全いいねデータをリセット中...');
+  
+  try {
+    // 1. ローカルストレージクリア
+    localStorage.clear();
+    console.log('🗑️ localStorage クリア完了');
+    
+    // 2. Firebaseデータも削除を試行
+    if (database) {
+      try {
+        await database.ref('likes').remove();
+        console.log('🗑️ Firebase likes データ削除完了');
+      } catch (firebaseError) {
+        console.warn('⚠️ Firebase削除は権限エラーで失敗（ローカルはクリア済み）');
+      }
+    }
+    
+    // 3. ページ上の全ボタンを0に更新
+    const likeButtons = document.querySelectorAll('.like-btn');
+    likeButtons.forEach(button => {
+      updateButtonUI(button, false, 0);
+    });
+    
+    console.log('✅ ローカルリセット完了 - 0からテスト開始可能');
+    console.log('🔄 ページを再読み込みして完全リセット確認をしてください');
+    
+  } catch (error) {
+    console.error('❌ リセット失敗:', error);
+  }
+};
+
+// 簡易リセット（ローカルのみ）
+window.resetLocalLikes = function() {
+  console.log('🔄 ローカルいいねデータをクリア中...');
+  
+  localStorage.clear();
+  
+  // ページ上の全ボタンを0に更新
+  const likeButtons = document.querySelectorAll('.like-btn');
+  likeButtons.forEach(button => {
+    updateButtonUI(button, false, 0);
+  });
+  
+  console.log('✅ ローカルクリア完了 - ページ再読み込み推奨');
+};
+
+// 現在の状態確認
+window.checkLikeStatus = function() {
+  const likeButtons = document.querySelectorAll('.like-btn');
+  console.log(`👆 ${likeButtons.length}個のいいねボタンを発見`);
+  console.log(`🔥 Firebase接続: ${!!database}`);
+  console.log(`👤 ユーザーID: ${currentUserId?.slice(-8)}...`);
+};
+
+console.log('🛠️ デバッグ機能:');
+console.log('  - resetAllLikes() : 全いいねを0にリセット（ローカル + Firebase）');
+console.log('  - resetLocalLikes() : ローカルのみリセット（簡易版）');
+console.log('  - checkLikeStatus() : 状態確認');
 
 function setupFilter(works){
   const bar = document.querySelector('.filter-bar');

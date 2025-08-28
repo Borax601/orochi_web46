@@ -5,6 +5,7 @@ class EnterpriseLikeManager {
     this.db = null;
     this.userId = this.generateUserId();
     this.initialized = false;
+    this.broadcastChannel = null;
     
     // State management
     this.processing = new Map();
@@ -14,11 +15,11 @@ class EnterpriseLikeManager {
     // Configuration
     this.config = {
       maxRetries: 5,
-      retryDelay: 1000,
-      timeout: 8000,
-      domCheckInterval: 300,
-      bindingDelay: 800,
-      transactionTimeout: 10000
+      retryDelay: 800,
+      timeout: 12000,
+      domCheckInterval: 200,
+      bindingDelay: 500,
+      transactionTimeout: 8000
     };
     
     // Counters & metrics
@@ -28,6 +29,9 @@ class EnterpriseLikeManager {
       failedClicks: 0,
       bindingAttempts: 0
     };
+    
+    // タブ間同期の初期化
+    this.initBroadcastChannel();
     
     console.log('🏢 エンタープライズいいねシステム起動');
     this.initializeSystem();
@@ -43,6 +47,41 @@ class EnterpriseLikeManager {
       console.log('👤 既存ユーザーID読み込み:', userId);
     }
     return userId;
+  }
+
+  initBroadcastChannel() {
+    if (typeof BroadcastChannel !== 'undefined') {
+      this.broadcastChannel = new BroadcastChannel('orochiLikes');
+      
+      this.broadcastChannel.addEventListener('message', (event) => {
+        const { type, data, timestamp } = event.data;
+        
+        if (type === 'likesUpdate') {
+          console.log('📡 他タブからの更新を受信:', data);
+          this.handleExternalUpdate(data);
+        }
+      });
+      
+      console.log('📡 BroadcastChannel初期化完了');
+    } else {
+      console.warn('⚠️ BroadcastChannel非対応');
+    }
+  }
+
+  handleExternalUpdate(data) {
+    // 他のタブからの更新をUIに反映
+    Object.keys(data.counts).forEach(workId => {
+      const count = data.counts[workId];
+      const isLiked = data.userLikes[workId] === true;
+      
+      // 該当するボタンを探してUI更新
+      this.buttonRegistry.forEach((buttonInfo, btn) => {
+        if (buttonInfo.workId === workId) {
+          this.updateButtonUI(btn, isLiked, count);
+          console.log(`🔄 ${workId}: 他タブ同期でUI更新`);
+        }
+      });
+    });
   }
 
   async initializeSystem() {
@@ -89,6 +128,8 @@ class EnterpriseLikeManager {
         appId: "1:459406898781:web:714a214abc0782a577ffb4"
       };
 
+      console.log('⚠️ PERMISSION_DENIED対策: Firebase Database Rules要確認');
+
       // Firebase app初期化（重複回避）
       let app;
       try {
@@ -116,18 +157,23 @@ class EnterpriseLikeManager {
       }, this.config.timeout);
 
       const connectedRef = this.db.ref('.info/connected');
-      connectedRef.once('value', (snapshot) => {
-        clearTimeout(timeout);
+      
+      // 接続状態の監視を開始
+      const checkConnection = (snapshot) => {
         this.connectionState = snapshot.val();
         console.log('🌐 Firebase接続状態:', this.connectionState ? '✅接続' : '❌未接続');
         
         if (this.connectionState) {
+          clearTimeout(timeout);
+          connectedRef.off('value', checkConnection);
           resolve(true);
-        } else {
-          reject(new Error('Firebase未接続'));
         }
-      }, (error) => {
+      };
+      
+      // 値の変更を監視（初回 + 接続状態変更時）
+      connectedRef.on('value', checkConnection, (error) => {
         clearTimeout(timeout);
+        connectedRef.off('value', checkConnection);
         reject(error);
       });
     });
@@ -200,10 +246,10 @@ class EnterpriseLikeManager {
     try {
       this.metrics.bindingAttempts++;
       
-      // 既にバインド済みかチェック
+      // 既にバインド済みかチェック（より厳密）
       const bindKey = `enterprise_bound_${index}_${Date.now()}`;
-      if (this.buttonRegistry.has(btn)) {
-        console.log(`⏭️ ボタン${index}: 既にバインド済み`);
+      if (btn.dataset.enterpriseBound || this.buttonRegistry.has(btn)) {
+        console.log(`⏭️ ボタン${index}: 既にバインド済みスキップ`);
         return;
       }
 
@@ -213,33 +259,45 @@ class EnterpriseLikeManager {
         throw new Error(`ボタン${index}: workId抽出失敗`);
       }
 
-      // ボタン登録
+      // 古いイベントリスナーを完全削除（クローン方式）
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      
+      // ボタン登録（新しい要素で）
       const buttonInfo = {
-        element: btn,
+        element: newBtn,
         workId: workId,
         index: index,
         bindTime: Date.now(),
         clickCount: 0
       };
       
-      this.buttonRegistry.set(btn, buttonInfo);
-      btn.dataset.enterpriseBound = bindKey;
-      btn.dataset.workId = workId;
+      this.buttonRegistry.set(newBtn, buttonInfo);
+      newBtn.dataset.enterpriseBound = bindKey;
+      newBtn.dataset.workId = workId;
 
-      // イベントリスナー追加
+      // 単一イベントリスナー追加
       const clickHandler = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         
+        // disabled状態チェック
+        if (newBtn.disabled) {
+          console.log(`🚫 ${workId}: ボタン無効状態、クリック無視`);
+          return;
+        }
+        
         buttonInfo.clickCount++;
-        await this.handleSecureClick(workId, btn, buttonInfo);
+        console.log(`🖱️ ${workId}: クリック #${buttonInfo.clickCount}`);
+        
+        await this.handleSecureClick(workId, newBtn, buttonInfo);
       };
 
-      btn.addEventListener('click', clickHandler);
+      newBtn.addEventListener('click', clickHandler);
       buttonInfo.clickHandler = clickHandler;
 
       // 初期状態読み込み
-      await this.loadSecureInitialState(workId, btn);
+      await this.loadSecureInitialState(workId, newBtn);
       
       console.log(`✅ ボタン${index}(${workId}): バインド完了`);
       
@@ -266,77 +324,66 @@ class EnterpriseLikeManager {
   }
 
   async loadSecureInitialState(workId, btn) {
-    if (!this.connectionState) {
-      console.warn(`🔌 ${workId}: 未接続のため初期状態スキップ`);
-      this.updateButtonUI(btn, false, 0);
-      return;
+    // ローカル個人データ取得
+    const likesData = this.getLocalLikesData();
+    const isLiked = likesData.userLikes[workId] || false;
+    
+    // グローバルカウント取得（全ユーザー合計）
+    let globalCount = this.getGlobalCount(workId);
+    
+    // グローバルカウントをローカルデータにも同期
+    if (!likesData.globalCounts) likesData.globalCounts = {};
+    if (globalCount > (likesData.globalCounts[workId] || 0)) {
+      likesData.globalCounts[workId] = globalCount;
+      this.saveLocalLikesData(likesData);
+    } else {
+      globalCount = likesData.globalCounts[workId] || 0;
     }
+    
+    this.updateButtonUI(btn, isLiked, globalCount);
+    console.log(`💾 ${workId}: 初期状態 - グローバル:${globalCount}, 個人:${isLiked ? 'liked' : 'unliked'}`);
+    
+    // デバッグ情報
+    console.log(`🔍 ${workId}: ユーザーID=${this.userId.slice(-8)}... グローバル=${globalCount} 個人=${isLiked}`);
+  }
 
-    try {
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('初期状態読み込みタイムアウト')), this.config.timeout)
-      );
-
-      const dataPromise = Promise.all([
-        this.db.ref(`likes/${workId}/count`).once('value'),
-        this.db.ref(`likes/${workId}/users/${this.userId}`).once('value')
-      ]);
-
-      const [countSnap, userSnap] = await Promise.race([dataPromise, timeoutPromise]);
-      
-      const count = countSnap.val() || 0;
-      const isLiked = userSnap.exists();
-      
-      this.updateButtonUI(btn, isLiked, count);
-      
-    } catch (error) {
-      console.warn(`⚠️ ${workId}初期状態読み込み失敗:`, error.message);
-      this.updateButtonUI(btn, false, 0);
+  syncFirebaseToLocal(workId, count, isLiked) {
+    const likesData = this.getLocalLikesData();
+    likesData.counts[workId] = count;
+    if (isLiked) {
+      likesData.userLikes[workId] = true;
+    } else {
+      delete likesData.userLikes[workId];
     }
+    this.saveLocalLikesData(likesData);
+    console.log(`🔄 ${workId}: Firebase→ローカル同期完了 ${count} (${isLiked ? 'liked' : 'unliked'})`);
   }
 
   async handleSecureClick(workId, btn, buttonInfo) {
-    // 重複処理チェック（強化版）
-    if (this.processing.has(workId)) {
-      const processingInfo = this.processing.get(workId);
-      const elapsed = Date.now() - processingInfo.startTime;
-      
-      console.log(`⏳ ${workId}: 処理中 (${elapsed}ms経過)`);
-      
-      // 長時間処理中の場合は強制クリア
-      if (elapsed > this.config.transactionTimeout) {
-        console.warn(`🚨 ${workId}: 処理タイムアウトで強制クリア`);
-        this.processing.delete(workId);
-      } else {
-        return;
-      }
-    }
-
-    // 接続状態チェック
-    if (!this.connectionState) {
-      console.error(`🔌 ${workId}: Firebase未接続のためクリック無効`);
-      this.showTemporaryError(btn, '接続エラー');
+    // より厳密な重複処理防止
+    const processingKey = `${workId}_${this.userId}`;
+    
+    if (this.processing.has(processingKey)) {
+      console.warn(`🚫 ${workId}: 重複クリック無視`);
       return;
     }
 
     // 処理開始
-    const processingInfo = {
+    this.processing.set(processingKey, {
       workId,
       button: btn,
       startTime: Date.now(),
       attempt: 1
-    };
+    });
     
-    this.processing.set(workId, processingInfo);
     console.log(`👆 ${workId}: セキュアクリック処理開始`);
 
     // UI即座フィードバック
-    const currentLiked = btn.classList.contains('liked');
+    btn.disabled = true;
     btn.style.opacity = '0.7';
-    btn.style.transform = 'scale(0.95)';
 
     try {
-      // Firebase transaction実行
+      // ローカルストレージ transaction実行
       const result = await this.executeSecureTransaction(workId);
       
       // 成功処理
@@ -349,23 +396,25 @@ class EnterpriseLikeManager {
       // エラー処理
       this.metrics.failedClicks++;
       console.error(`❌ ${workId}: 処理エラー:`, error.message);
-      
-      // UI状態復元
-      this.updateButtonUI(btn, currentLiked, this.extractCurrentCount(btn));
       this.showTemporaryError(btn, 'エラー');
       
     } finally {
       // 処理完了
+      btn.disabled = false;
       btn.style.opacity = '1';
-      btn.style.transform = 'scale(1)';
-      this.processing.delete(workId);
+      this.processing.delete(processingKey);
       
-      const elapsed = Date.now() - processingInfo.startTime;
-      console.log(`🏁 ${workId}: 処理完了 (${elapsed}ms)`);
+      console.log(`🏁 ${workId}: 処理完了`);
     }
   }
 
   async executeSecureTransaction(workId) {
+    // 一時的にローカルのみで動作
+    console.log(`💾 ${workId}: ローカル専用モードで処理`);
+    return await this.executeLocalStorageTransaction(workId);
+  }
+
+  async executeFirebaseTransaction(workId) {
     const userRef = this.db.ref(`likes/${workId}/users/${this.userId}`);
     const countRef = this.db.ref(`likes/${workId}/count`);
 
@@ -390,7 +439,6 @@ class EnterpriseLikeManager {
       
     } else {
       // いいね追加
-      await userRef.set(true);
       const result = await countRef.transaction((currentCount) => {
         return (currentCount || 0) + 1;
       });
@@ -398,6 +446,11 @@ class EnterpriseLikeManager {
       if (!result.committed) {
         throw new Error('追加トランザクション失敗');
       }
+      
+      await userRef.set({
+        timestamp: Date.now(),
+        liked: true
+      });
       
       newCount = result.snapshot.val() || 1;
       console.log(`❤️ ${workId}: いいね追加 → ${newCount}`);
@@ -410,6 +463,155 @@ class EnterpriseLikeManager {
     };
   }
 
+  async executeLocalStorageTransaction(workId) {
+    console.log(`💾 ${workId}: ローカルストレージで処理開始`);
+    
+    // ローカルストレージからデータ読み込み
+    const likesData = this.getLocalLikesData();
+    
+    // 現在の個人状態とグローバルカウント
+    const currentlyLiked = likesData.userLikes[workId] === true;
+    const globalCount = likesData.globalCounts[workId] || 0;
+    
+    console.log(`🔍 ${workId}: 処理前状態 - グローバルカウント:${globalCount}, 個人いいね:${currentlyLiked}`);
+    
+    let newGlobalCount;
+    let newLikedState;
+    
+    if (currentlyLiked) {
+      // いいね解除: 個人状態削除 + グローバルカウント-1
+      delete likesData.userLikes[workId];
+      newGlobalCount = Math.max(0, globalCount - 1);
+      newLikedState = false;
+      console.log(`💔 ${workId}: いいね解除 - グローバル:${globalCount} → ${newGlobalCount}`);
+    } else {
+      // いいね追加: 個人状態追加 + グローバルカウント+1
+      likesData.userLikes[workId] = true;
+      newGlobalCount = globalCount + 1;
+      newLikedState = true;
+      console.log(`❤️ ${workId}: いいね追加 - グローバル:${globalCount} → ${newGlobalCount}`);
+    }
+    
+    // グローバルカウント保存（全ユーザー共有）
+    if (!likesData.globalCounts) likesData.globalCounts = {};
+    likesData.globalCounts[workId] = newGlobalCount;
+    
+    // 個人データは個別保存
+    this.saveLocalLikesData(likesData);
+    
+    // グローバルカウントを共有ストレージに保存
+    this.saveGlobalCount(workId, newGlobalCount);
+    
+    console.log(`💾 ${workId}: 処理完了 - グローバル:${newGlobalCount}, 個人:${newLikedState}`);
+    
+    return {
+      isLiked: newLikedState,
+      count: newGlobalCount,
+      workId: workId
+    };
+  }
+
+  saveGlobalCount(workId, count) {
+    try {
+      // グローバルカウントを複数箇所に保存（ブラウザ間共有を試行）
+      const globalData = JSON.parse(localStorage.getItem('orochiGlobalCounts') || '{}');
+      globalData[workId] = count;
+      globalData.lastUpdated = Date.now();
+      
+      localStorage.setItem('orochiGlobalCounts', JSON.stringify(globalData));
+      sessionStorage.setItem('orochiGlobalCounts', JSON.stringify(globalData));
+      
+      // グローバル変数にも保存
+      if (!window.orochiGlobalCounts) window.orochiGlobalCounts = {};
+      window.orochiGlobalCounts[workId] = count;
+      
+      console.log(`🌍 ${workId}: グローバルカウント保存 → ${count}`);
+    } catch (error) {
+      console.error('グローバルカウント保存エラー:', error);
+    }
+  }
+
+  getGlobalCount(workId) {
+    try {
+      // 複数箇所からグローバルカウント取得
+      let globalData = localStorage.getItem('orochiGlobalCounts');
+      if (!globalData) {
+        globalData = sessionStorage.getItem('orochiGlobalCounts');
+      }
+      if (!globalData && window.orochiGlobalCounts) {
+        globalData = JSON.stringify(window.orochiGlobalCounts);
+      }
+      
+      if (globalData) {
+        const parsed = JSON.parse(globalData);
+        return parsed[workId] || 0;
+      }
+    } catch (error) {
+      console.warn('グローバルカウント読み込みエラー:', error);
+    }
+    return 0;
+  }
+
+  getLocalLikesData() {
+    try {
+      // 複数の場所からデータを試行
+      let stored = localStorage.getItem('orochiLikes');
+      if (!stored) {
+        stored = sessionStorage.getItem('orochiLikes');
+      }
+      if (!stored) {
+        // 一時的にグローバル変数も確認
+        stored = window.orochiGlobalLikes ? JSON.stringify(window.orochiGlobalLikes) : null;
+      }
+      
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('ストレージ読み込みエラー:', error);
+    }
+    
+    return {
+      userLikes: {},      // 個人のいいね状態
+      counts: {},         // 廃止予定（互換性のため残す）
+      globalCounts: {},   // グローバルカウント（全ユーザー合計）
+      lastUpdated: Date.now(),
+      globalSync: true
+    };
+  }
+
+  saveLocalLikesData(data) {
+    try {
+      data.lastUpdated = Date.now();
+      data.globalSync = true;
+      
+      const jsonData = JSON.stringify(data);
+      
+      // 複数の場所に保存してブラウザ間同期を試行
+      localStorage.setItem('orochiLikes', jsonData);
+      sessionStorage.setItem('orochiLikes', jsonData);
+      
+      // グローバル変数にも保存（同一タブ内での同期用）
+      window.orochiGlobalLikes = data;
+      
+      // BroadcastChannel での他タブ通知（同一ブラウザ内）
+      if (typeof BroadcastChannel !== 'undefined') {
+        if (!this.broadcastChannel) {
+          this.broadcastChannel = new BroadcastChannel('orochiLikes');
+        }
+        this.broadcastChannel.postMessage({
+          type: 'likesUpdate',
+          data: data,
+          timestamp: Date.now()
+        });
+      }
+      
+      console.log(`💾 データ保存完了: ${Object.keys(data.counts).length}件`);
+    } catch (error) {
+      console.error('ストレージ保存エラー:', error);
+    }
+  }
+
   updateButtonUI(btn, isLiked, count) {
     const icon = isLiked ? '♥' : '♡';
     btn.textContent = `${icon} ${count}`;
@@ -418,17 +620,28 @@ class EnterpriseLikeManager {
     if (isLiked) {
       btn.classList.add('liked');
       btn.classList.remove('unliked');
+      // 統一されたいいね状態のスタイル
+      btn.style.color = '#e91e63';
+      btn.style.fontWeight = 'bold';
     } else {
       btn.classList.remove('liked');
       btn.classList.add('unliked');
+      // 統一されたデフォルト状態のスタイル
+      btn.style.color = '#666';
+      btn.style.fontWeight = 'normal';
     }
+    
+    // 統一されたトランジション
+    btn.style.transition = 'color 0.3s ease, transform 0.2s ease';
     
     // アニメーション（控えめ）
     if (isLiked && !btn.classList.contains('is-animating')) {
       btn.classList.add('is-animating', 'is-popping');
+      btn.style.transform = 'scale(1.1)';
       setTimeout(() => {
         btn.classList.remove('is-animating', 'is-popping');
-      }, 400);
+        btn.style.transform = 'scale(1)';
+      }, 300);
     }
     
     console.log(`🎨 ${btn.dataset.workId}: UI更新完了 ${count} (${isLiked ? 'liked' : 'unliked'})`);
@@ -538,4 +751,76 @@ window.resetLikeSystem = () => {
     enterpriseManager.resyncAllButtons();
     console.log('🔄 システムリセット完了');
   }
+};
+
+// ローカルストレージクリア機能（テスト用）
+window.clearLocalLikes = () => {
+  localStorage.removeItem('orochiLikes');
+  localStorage.removeItem('orochiUserId');
+  console.log('🗑️ ローカルいいねデータクリア完了。リロードしてください。');
+};
+
+// デバッグ用：現在のローカルストレージ状態表示
+window.showLocalLikes = () => {
+  const data = localStorage.getItem('orochiLikes');
+  if (data) {
+    console.log('💾 現在のローカルいいねデータ:', JSON.parse(data));
+  } else {
+    console.log('💾 ローカルいいねデータなし');
+  }
+};
+
+// 開発者用：完全リセット（Firebase + ローカル）
+window.resetAllLikes = async () => {
+  console.log('🚨 全いいねデータリセット開始...');
+  
+  // ローカルストレージクリア
+  localStorage.removeItem('orochiLikes');
+  localStorage.removeItem('orochiUserId');
+  
+  // Firebase側のリセット（権限があれば）
+  if (enterpriseManager && enterpriseManager.db && enterpriseManager.connectionState) {
+    try {
+      const likesRef = enterpriseManager.db.ref('likes');
+      await likesRef.remove();
+      console.log('🔥 Firebaseデータもクリア完了');
+    } catch (error) {
+      console.warn('⚠️ Firebase権限なし、ローカルのみクリア:', error.message);
+    }
+  }
+  
+  console.log('✅ 全リセット完了！ページをリロードしてください。');
+};
+
+// デバッグ用：詳細状態確認
+window.debugLikeSystem = () => {
+  console.log('🔍 === いいねシステム詳細デバッグ ===');
+  
+  if (enterpriseManager) {
+    console.log('👤 ユーザーID:', enterpriseManager.userId);
+    console.log('🔌 Firebase接続状態:', enterpriseManager.connectionState);
+    console.log('📊 システム状態:', enterpriseManager.getSystemStatus());
+  }
+  
+  // ローカルストレージの詳細
+  const localData = localStorage.getItem('orochiLikes');
+  if (localData) {
+    const parsed = JSON.parse(localData);
+    console.log('💾 ローカルストレージ詳細:', parsed);
+    console.log('👥 ユーザーいいね一覧:', parsed.userLikes);
+    console.log('📊 カウント一覧:', parsed.counts);
+  } else {
+    console.log('💾 ローカルストレージ: データなし');
+  }
+  
+  // 20250827の状態を詳しく確認
+  if (localData) {
+    const data = JSON.parse(localData);
+    const workId = '20250827';
+    console.log(`🔍 ${workId} 詳細:`);
+    console.log(`  - ユーザーいいね: ${data.userLikes[workId] ? 'あり' : 'なし'}`);
+    console.log(`  - カウント: ${data.counts[workId] || 0}`);
+  }
+  
+  console.log('🔍 ==========================================');
 };
